@@ -3,6 +3,7 @@ import 'package:check_it_off/widgets/tasks_list.dart';
 import 'package:check_it_off/screens/add_task_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:check_it_off/models/task_data.dart';
+import 'package:check_it_off/models/task.dart';
 
 class TasksScreen extends StatelessWidget {
   @override

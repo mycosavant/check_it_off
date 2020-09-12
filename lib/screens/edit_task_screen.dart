@@ -5,16 +5,25 @@ import 'package:check_it_off/models/task.dart';
 import 'package:provider/provider.dart';
 import 'package:check_it_off/models/task_data.dart';
 
-String newTaskTitle;
+class EditTaskScreen extends StatefulWidget {
+  final Task task;
+  final int index;
+  EditTaskScreen(this.task, this.index);
 
-class AddTaskScreen extends StatefulWidget {
   @override
-  _AddTaskScreenState createState() => _AddTaskScreenState();
+  _EditTaskScreenState createState() => _EditTaskScreenState(task, index);
 }
 
-class _AddTaskScreenState extends State<AddTaskScreen> {
+class _EditTaskScreenState extends State<EditTaskScreen> {
+  final Task task;
+  final int index;
+  String _selectedPriority;
+  _EditTaskScreenState(this.task, this.index) {
+    _selectedPriority = task.priority.toString();
+  }
+
   List<String> priorityList = ['High', 'Normal', 'Low'];
-  String _selectedPriority='Normal';
+
   DropdownButton<String> androidDropdown() {
     List<DropdownMenuItem<String>> dropdownItems = [];
     for (String priority in priorityList) {
@@ -71,9 +80,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       children: pickerItems,
     );
   }
+
+
   @override
   Widget build(BuildContext context) {
-
+    String myTaskTitle;
 
     return Container(
       color: Color(0xff757575),
@@ -82,7 +93,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
+            topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
           ),
         ),
@@ -90,7 +101,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              'Add Task',
+              'Edit Task',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 30.0,
@@ -98,10 +109,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
             ),
             TextFormField(
+              initialValue: widget.task.name,
               autofocus: true,
               textAlign: TextAlign.center,
-              onChanged: (newText) {
-                newTaskTitle = newText;
+              onChanged: (editedText) {
+                myTaskTitle = editedText;
               },
             ),
             Container(
@@ -113,14 +125,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             ),
             FlatButton(
               child: Text(
-                'Add',
+                'Update',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
               color: Colors.lightBlueAccent,
               onPressed: () {
-                Provider.of<TaskData>(context).addTask(newTaskTitle, _selectedPriority);
+                Provider.of<TaskData>(context)
+                    .editTask(myTaskTitle==null ?  widget.task.name :myTaskTitle, widget.index, _selectedPriority);
                 Navigator.pop(context);
               },
             ),
