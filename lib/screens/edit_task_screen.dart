@@ -1,8 +1,9 @@
 import 'dart:io' show Platform;
+import 'package:check_it_off/helpers/db.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/models/task.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/Provider.dart' as Prov;
 import 'package:check_it_off/models/task_data.dart';
 
 class EditTaskScreen extends StatefulWidget {
@@ -21,6 +22,24 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   _EditTaskScreenState(this.task, this.index) {
     _selectedPriority = task.priority.toString();
   }
+
+  void initState() {
+    super.initState();
+    // loadDB();
+  }
+
+  List<Task> _tasks = [];
+  void refresh() async {
+    var db = new DB();
+    List<Task> _results = await db.query();
+    _tasks = _results;
+    Prov.Provider.of<TaskData>(context).tasks=_tasks;
+    setState(() {});
+  }
+  // void loadDB() async {
+  //   await DB.init();
+  //   WidgetsFlutterBinding.ensureInitialized();
+  // }
 
   List<String> priorityList = ['High', 'Normal', 'Low'];
 
@@ -52,7 +71,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   }
 
   int getIndex() {
-    return _selectedPriority.toString().contains('.')? priorityList.indexOf(_selectedPriority.toString().split(".")[1]): priorityList.indexOf(_selectedPriority.toString());
+    return _selectedPriority.toString().contains('.')
+        ? priorityList.indexOf(_selectedPriority.toString().split(".")[1])
+        : priorityList.indexOf(_selectedPriority.toString());
   }
 
   CupertinoPicker iOSPicker() {
@@ -80,7 +101,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       children: pickerItems,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +151,14 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 ),
               ),
               color: Colors.lightBlueAccent,
-              onPressed: () {
-                Provider.of<TaskData>(context)
-                    .editTask(myTaskTitle==null ?  widget.task.name :myTaskTitle, widget.index, _selectedPriority);
+              onPressed: () async {
+                Prov.Provider.of<TaskData>(context).editTask(
+                    myTaskTitle == null ? widget.task.name : myTaskTitle,
+                    widget.index,
+                    _selectedPriority);
+                var db = new DB();
+                dynamic result = await db.update(task);
+
                 Navigator.pop(context);
               },
             ),

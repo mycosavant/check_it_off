@@ -1,8 +1,9 @@
 import 'dart:io' show Platform;
+import 'package:check_it_off/helpers/db.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/models/task.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/Provider.dart' as Prov;
 import 'package:check_it_off/models/task_data.dart';
 
 String newTaskTitle;
@@ -13,8 +14,27 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  void initState() {
+    super.initState();
+    // loadDB();
+  }
+
+  // void loadDB() async {
+  //   await DB.init();
+  //   WidgetsFlutterBinding.ensureInitialized();
+  // }
+
+  List<Task> _tasks = [];
+  void refresh() async {
+    var db = new DB();
+    List<Task> _results = await db.query();
+    _tasks = _results;
+    Prov.Provider.of<TaskData>(context).tasks=_tasks;
+    setState(() {});
+  }
+
   List<String> priorityList = ['High', 'Normal', 'Low'];
-  String _selectedPriority='Normal';
+  String _selectedPriority = 'Normal';
   DropdownButton<String> androidDropdown() {
     List<DropdownMenuItem<String>> dropdownItems = [];
     for (String priority in priorityList) {
@@ -43,7 +63,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   int getIndex() {
-    return _selectedPriority.toString().contains('.')? priorityList.indexOf(_selectedPriority.toString().split(".")[1]): priorityList.indexOf(_selectedPriority.toString());
+    return _selectedPriority.toString().contains('.')
+        ? priorityList.indexOf(_selectedPriority.toString().split(".")[1])
+        : priorityList.indexOf(_selectedPriority.toString());
   }
 
   CupertinoPicker iOSPicker() {
@@ -71,10 +93,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       children: pickerItems,
     );
   }
+
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
       color: Color(0xff757575),
       child: Container(
@@ -82,7 +103,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
+            topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
           ),
         ),
@@ -119,8 +140,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
               ),
               color: Colors.lightBlueAccent,
-              onPressed: () {
-                Provider.of<TaskData>(context).addTask(newTaskTitle, _selectedPriority);
+              onPressed: () async {
+                Task t;
+                t =  Prov.Provider.of<TaskData>(context)
+                    .addTask(newTaskTitle, _selectedPriority);
+                var db = new DB();
+                dynamic result = await db.insert(t);
+
+                // await DB.insert(t);
                 Navigator.pop(context);
               },
             ),
