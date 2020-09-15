@@ -5,54 +5,46 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 class TaskData extends ChangeNotifier {
-  List<Task> _tasks = [
-    Task(name: 'Buy milk', priority: priorityLevel.Normal),
-    Task(name: 'Buy eggs', priority: priorityLevel.Normal),
-    Task(name: 'Buy bread', priority: priorityLevel.Normal),
+  List<Task> tasks = [
+    // Task(name: 'Buy milk', priority: priorityLevel.Normal),
+    // Task(name: 'Buy eggs', priority: priorityLevel.Normal),
+    // Task(name: 'Buy bread', priority: priorityLevel.Normal),
   ];
 
-  UnmodifiableListView<Task> get tasks {
-    return UnmodifiableListView(_tasks);
-  }
-
   int get taskCount {
-    return _tasks.length;
+    return tasks.length;
   }
 
-  void addTask(String newTaskTitle, String priority) {
+  Task addTask(String newTaskTitle, String priority) {
     priorityLevel newPriority;
-    if(priorityLevel.High.toString().contains(priority)){
+    if (priorityLevel.High.toString().contains(priority)) {
       newPriority = priorityLevel.High;
-    }
-    else if(priorityLevel.Low.toString().contains(priority)){
+    } else if (priorityLevel.Low.toString().contains(priority)) {
       newPriority = priorityLevel.Low;
-    }
-    else {
+    } else {
       newPriority = priorityLevel.Normal;
     }
     final task = Task(name: newTaskTitle, priority: newPriority);
-    _tasks.add(task);
+    tasks.add(task);
     notifyListeners();
+    return task;
   }
 
   void editTask(String theTaskTitle, int index, String selectedPriority) {
     priorityLevel editPriority;
-    if(priorityLevel.High.toString().contains(selectedPriority)){
+    if (priorityLevel.High.toString().contains(selectedPriority)) {
       editPriority = priorityLevel.High;
-    }
-    else if(priorityLevel.Low.toString().contains(selectedPriority)){
+    } else if (priorityLevel.Low.toString().contains(selectedPriority)) {
       editPriority = priorityLevel.Low;
-    }
-    else {
-        editPriority = priorityLevel.Normal;
+    } else {
+      editPriority = priorityLevel.Normal;
     }
     final task = Task(name: theTaskTitle, priority: editPriority);
-    _tasks[index].name = task.name;
-    _tasks[index].priority = task.priority;
-    _tasks[index].isDone = task.isDone;
+    tasks[index].name = task.name;
+    tasks[index].priority = task.priority;
+    tasks[index].isDone = task.isDone;
     notifyListeners();
   }
-
 
   void updateTask(Task task) {
     task.toggleDone();
@@ -60,7 +52,17 @@ class TaskData extends ChangeNotifier {
   }
 
   void deleteTask(Task task) {
-    _tasks.remove(task);
+    tasks.remove(task);
+    notifyListeners();
+  }
+
+  void refreshList(List<Task> tasksList) {
+    tasks.clear();
+    tasks.addAll(tasksList);
+    notifyListeners();
+  }
+
+  void notify() {
     notifyListeners();
   }
 }
