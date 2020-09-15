@@ -12,7 +12,7 @@ dependencies:
 
   cupertino_icons: ^1.0.0
   provider: ^3.0.0+1
-  sqflite: ^1.2.0
+  sqflite: any
   path_provider: ^1.6.0
   uuid: ^2.2.2
 

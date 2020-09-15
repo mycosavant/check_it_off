@@ -30,6 +30,7 @@ class _TasksListState extends State<TasksList> {
     List<Task> _results = await db.query();
     _tasks = _results;
     Prov.Provider.of<TaskData>(context).tasks=_tasks;
+    Prov.Provider.of<TaskData>(context).notify();
     setState(() {});
   }
 

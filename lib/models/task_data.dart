@@ -17,13 +17,11 @@ class TaskData extends ChangeNotifier {
 
   Task addTask(String newTaskTitle, String priority) {
     priorityLevel newPriority;
-    if(priorityLevel.High.toString().contains(priority)){
+    if (priorityLevel.High.toString().contains(priority)) {
       newPriority = priorityLevel.High;
-    }
-    else if(priorityLevel.Low.toString().contains(priority)){
+    } else if (priorityLevel.Low.toString().contains(priority)) {
       newPriority = priorityLevel.Low;
-    }
-    else {
+    } else {
       newPriority = priorityLevel.Normal;
     }
     final task = Task(name: newTaskTitle, priority: newPriority);
@@ -34,14 +32,12 @@ class TaskData extends ChangeNotifier {
 
   void editTask(String theTaskTitle, int index, String selectedPriority) {
     priorityLevel editPriority;
-    if(priorityLevel.High.toString().contains(selectedPriority)){
+    if (priorityLevel.High.toString().contains(selectedPriority)) {
       editPriority = priorityLevel.High;
-    }
-    else if(priorityLevel.Low.toString().contains(selectedPriority)){
+    } else if (priorityLevel.Low.toString().contains(selectedPriority)) {
       editPriority = priorityLevel.Low;
-    }
-    else {
-        editPriority = priorityLevel.Normal;
+    } else {
+      editPriority = priorityLevel.Normal;
     }
     final task = Task(name: theTaskTitle, priority: editPriority);
     tasks[index].name = task.name;
@@ -49,7 +45,6 @@ class TaskData extends ChangeNotifier {
     tasks[index].isDone = task.isDone;
     notifyListeners();
   }
-
 
   void updateTask(Task task) {
     task.toggleDone();
@@ -61,9 +56,13 @@ class TaskData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void refreshList(List<Task> tasksList){
+  void refreshList(List<Task> tasksList) {
     tasks.clear();
     tasks.addAll(tasksList);
+    notifyListeners();
+  }
+
+  void notify() {
     notifyListeners();
   }
 }

@@ -1,8 +1,7 @@
+import 'package:check_it_off/helpers/db.dart';
 import 'package:uuid/uuid.dart';
 
 enum priorityLevel { High, Normal, Low }
-
-var uuid = Uuid();
 
 class Task {
   var id;
@@ -12,30 +11,11 @@ class Task {
 
   static String table = 'Tasks';
 
-  Task({this.id=-1, this.name, this.isDone = false, this.priority}){
-    if(this.id==-1) {
-      this.id = Uuid().v4();
-    }
-  }
+  Task({this.id, this.name, this.isDone = false, this.priority});
 
   void toggleDone() {
     isDone = !isDone;
   }
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'isDone': isDone.toString(),
-        'priority': priority.toString(),
-      };
-
-  Task.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        isDone = (json['isDone'] == 'true') ? true : false,
-        priority = (json['priority'].toString().contains('High'))
-            ? priorityLevel.High
-            : (json['priority'].toString().contains('Low'))
-                ? priorityLevel.Low
-                : priorityLevel.Normal;
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
@@ -45,9 +25,9 @@ class Task {
       'priority': priority.toString(),
     };
 
-    if (id != null) {
-      map['id'] = id;
-    }
+    // if (id != null) {
+    //   map['id'] = id;
+    // }
     return map;
   }
 
@@ -62,5 +42,4 @@ class Task {
                 ? priorityLevel.Low
                 : priorityLevel.Normal);
   }
-
 }
