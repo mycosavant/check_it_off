@@ -139,6 +139,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
             ),
             TextFormField(
+              initialValue: widget.task.name,
               style:
               TextStyle(fontSize: 20.0, color: Colors.lightBlueAccent),
               decoration: InputDecoration(
@@ -151,8 +152,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               ),
               autofocus: true,
               textAlign: TextAlign.center,
-              onChanged: (newText) {
-                myTaskTitle = newText;
+              onChanged: (editedText) {
+                myTaskTitle = editedText;
               },
             ),
             Padding(
