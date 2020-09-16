@@ -1,16 +1,18 @@
+import 'package:check_it_off/models/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/widgets/tasks_list.dart';
 import 'package:check_it_off/screens/add_task_screen.dart';
 import 'package:provider/Provider.dart' as Prov;
 import 'package:check_it_off/models/task_data.dart';
+import 'package:provider/provider.dart';
 
 class TasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      // backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.lightBlueAccent,
+        // backgroundColor: Colors.lightBlueAccent,
         child: Icon(Icons.add),
           onPressed: () {
             showModalBottomSheet(
@@ -34,15 +36,6 @@ class TasksScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                CircleAvatar(
-                  child: Icon(
-                    Icons.list,
-                    size: 30.0,
-                    color: Colors.lightBlueAccent,
-                  ),
-                  backgroundColor: Colors.white,
-                  radius: 30.0,
-                ),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -50,18 +43,18 @@ class TasksScreen extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       child: Icon(
-                        Icons.check,
+                        Icons.check_box_outlined,
                         size: 75.0,
                         color: Colors.lightBlueAccent,
                       ),
-                      backgroundColor: Colors.white,
+                      backgroundColor:  Provider.of<ThemeNotifier>(context).getCurrentTheme().contains('dark') ? Colors.white24 : Colors.blueGrey,
                       radius: 50.0,
                     ),
                     Text(
-                      '  it Off!',
+                      ' it Off!',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 50.0,
+                        // color: Colors.white,
+                        fontSize: 65.0,
                         fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.italic,
                       ),
@@ -71,8 +64,9 @@ class TasksScreen extends StatelessWidget {
                 Text(
                   '${Prov.Provider.of<TaskData>(context).taskCount} Tasks',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
+                    // color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -82,7 +76,7 @@ class TasksScreen extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                // color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0),

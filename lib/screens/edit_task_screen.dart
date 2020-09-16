@@ -3,6 +3,7 @@ import 'package:check_it_off/helpers/db.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/models/task.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/Provider.dart' as Prov;
 import 'package:check_it_off/models/task_data.dart';
 
@@ -26,6 +27,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   void initState() {
     super.initState();
     // loadDB();
+  }
+
+  bool isDarkMode(){
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+    return darkModeOn;
   }
 
   List<Task> _tasks = [];
@@ -107,11 +114,11 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     String myTaskTitle;
 
     return Container(
-      color: Color(0xff757575),
+      color: isDarkMode()? Color(0xFF212121) : Color(0xff757575),
       child: Container(
         padding: EdgeInsets.all(20.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode() ?Colors.black : Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -128,20 +135,37 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 color: Colors.lightBlueAccent,
               ),
             ),
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            ),
             TextFormField(
-              initialValue: widget.task.name,
+              style:
+              TextStyle(fontSize: 20.0, color: Colors.lightBlueAccent),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: EdgeInsets.all(12.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+              ),
               autofocus: true,
               textAlign: TextAlign.center,
-              onChanged: (editedText) {
-                myTaskTitle = editedText;
+              onChanged: (newText) {
+                myTaskTitle = newText;
               },
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
             ),
             Container(
               height: 150.0,
               alignment: Alignment.center,
-              padding: EdgeInsets.only(bottom: 30.0),
               color: Colors.lightBlueAccent,
               child: Platform.isIOS ? iOSPicker() : androidDropdown(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
             ),
             FlatButton(
               child: Text(
