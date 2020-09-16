@@ -20,23 +20,23 @@ class TaskTile extends StatelessWidget {
     this.priority,
   });
 
-  Icon getPriorityIcon(){
-    if (priority==priorityLevel.High){
+  Icon getPriorityIcon() {
+    if (priority == priorityLevel.High) {
       return new Icon(CupertinoIcons.up_arrow);
-    }
-    else if (priority==priorityLevel.Low){
+    } else if (priority == priorityLevel.Low) {
       return new Icon(CupertinoIcons.down_arrow);
     }
     return new Icon(Icons.label);
-}
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return ListTile(
       title: Text(
         taskTitle,
         style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
             decoration: isChecked ? TextDecoration.lineThrough : null),
       ),
       leading: Container(

@@ -5,8 +5,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:io' as io;
 
-import 'package:uuid/uuid.dart';
-
 class DB {
   static final DB _instance = new DB.internal();
 

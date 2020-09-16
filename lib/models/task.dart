@@ -1,5 +1,4 @@
 import 'package:check_it_off/helpers/db.dart';
-import 'package:uuid/uuid.dart';
 
 enum priorityLevel { High, Normal, Low }
 
