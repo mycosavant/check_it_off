@@ -1,4 +1,4 @@
-package co.appbrewery.check_it_off;
+package com.grimshawcoding.check_it_off;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

@@ -33,7 +33,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   List<Task> _tasks = [];
   void refresh() async {
     var db = new DB();
-    List<Task> _results = await db.query();
+    List<Task> _results = await db.query('system');
     _tasks = _results;
     Prov.Provider.of<TaskData>(context).tasks = _tasks;
     setState(() {});
