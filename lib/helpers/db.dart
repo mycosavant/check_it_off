@@ -12,6 +12,8 @@ class DB {
 
   static Database _db;
 
+  String sort = 'normal';
+
   Future<Database> get db async {
     if (_db != null) return _db;
     _db = await initDb();
@@ -73,9 +75,26 @@ class DB {
     return res > 0 ? true : false;
   }
 
-  Future<List<Task>> query() async {
+  Future<List<Task>> query([order = 'normal']) async {
+    if (order == 'current') {
+      order = sort;
+    }
+    sort = order;
     var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery('SELECT * FROM Task');
+    String sql = 'SELECT * FROM Task';
+    if (order == 'asc') {
+      sql = '$sql ORDER BY priority';
+    } else if (order == 'dsc') {
+      sql = '$sql ORDER BY priority DESC';
+    }
+    else if (order == 'aasc') {
+      sql = '$sql ORDER BY name';
+    }
+    else if (order == 'adsc') {
+      sql = '$sql ORDER BY name DESC';
+    }
+    print (sql);
+    List<Map> list = await dbClient.rawQuery(sql);
     List<Task> t = new List();
     for (int i = 0; i < list.length; i++) {
       var id = list[i]["id"];
@@ -92,5 +111,4 @@ class DB {
     print(t.length);
     return t;
   }
-
 }
