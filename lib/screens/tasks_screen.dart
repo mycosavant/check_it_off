@@ -14,6 +14,13 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
+
+  Future <bool> onboarded()async{
+    var db = new DB();
+  bool _result = await db.isOnboarded();
+  return _result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

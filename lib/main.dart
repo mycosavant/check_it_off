@@ -1,8 +1,10 @@
+import 'package:check_it_off/helpers/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/screens/tasks_screen.dart';
 import 'package:provider/Provider.dart' as Prov;
 import 'package:check_it_off/models/task_data.dart';
 import 'package:provider/provider.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 import 'models/theme_notifier.dart';
 import 'models/themes.dart';
@@ -22,7 +24,27 @@ class MyApp extends StatelessWidget {
       builder: (context) => TaskData(),
       child: MaterialApp(
         theme: themeNotifier.getTheme(),
-        home: TasksScreen(),
+        home: SplashScreen(
+          seconds: 3,
+          navigateAfterSeconds: new Onboarding(),
+          title: Text(''),
+          // title: new Text('Welcome In SplashScreen',
+          //   style: new TextStyle(
+          //       fontWeight: FontWeight.bold,
+          //       fontSize: 20.0
+          //   ),
+          // ),
+          image: new Image.asset(
+            'assets/splash.png',
+          ),
+          // backgroundGradient: new LinearGradient(colors: [Colors.cyan, Colors.blue], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          backgroundColor: Colors.lightBlueAccent,
+          styleTextUnderTheLoader: new TextStyle(),
+          photoSize: 150,
+          onClick: () => print("Flutter Egypt"),
+          loaderColor: Colors.white,
+        ),
+        // TasksScreen(),
       ),
     );
   }
