@@ -33,8 +33,6 @@ class DB {
     // When creating the db, create the table
     await db.execute(
         'CREATE TABLE Task (id INTEGER UNIQUE PRIMARY KEY NOT NULL, name STRING, isDone INT, priority STRING)');
-    await db.execute(
-        'CREATE TABLE Sys (id INTEGER UNIQUE PRIMARY KEY NOT NULL, onboarded INT)');
   }
 
   Future<int> insert(Task task) async {
@@ -75,19 +73,6 @@ class DB {
     int res = await dbClient.update("Task", task.toMap(),
         where: "id = ?", whereArgs: <int>[task.id]);
     return res > 0 ? true : false;
-  }
-
-  Future <bool> isOnboarded() async {
-
-    var dbClient = await db;
-    String sql = 'SELECT * FROM Sys';
-    List<Map> list = await dbClient.rawQuery(sql);
-    bool result;
-    for (int i = 0; i < list.length; i++) {
-       var onboarded = list[i]["onboarded"] == 1 ? true : false;
-       result=onboarded;
-    }
-    return result;
   }
 
   Future<List<Task>> query([order = 'normal']) async {

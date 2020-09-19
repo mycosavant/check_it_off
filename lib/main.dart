@@ -1,11 +1,9 @@
-import 'package:check_it_off/helpers/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/screens/tasks_screen.dart';
 import 'package:provider/Provider.dart' as Prov;
 import 'package:check_it_off/models/task_data.dart';
 import 'package:provider/provider.dart';
 import 'package:splashscreen/splashscreen.dart';
-
 import 'models/theme_notifier.dart';
 import 'models/themes.dart';
 
@@ -15,6 +13,7 @@ void main() => runApp(
         child: MyApp(),
       ),
     );
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
         theme: themeNotifier.getTheme(),
         home: SplashScreen(
           seconds: 3,
-          navigateAfterSeconds: new Onboarding(),
+          navigateAfterSeconds: TasksScreen(),
           title: Text(''),
           // title: new Text('Welcome In SplashScreen',
           //   style: new TextStyle(

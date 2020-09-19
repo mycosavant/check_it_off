@@ -16,6 +16,7 @@ dependencies:
   path_provider: ^1.6.0
   introduction_screen: ^1.0.9
   splashscreen: ^1.2.0
+  shared_preferences: ^0.5.10
 
 dev_dependencies:
   flutter_test:

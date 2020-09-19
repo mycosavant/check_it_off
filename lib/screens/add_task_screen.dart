@@ -17,7 +17,6 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   void initState() {
     super.initState();
-    // loadDB();
   }
 
   bool isDarkMode() {
@@ -25,10 +24,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     bool darkModeOn = brightness == Brightness.dark;
     return darkModeOn;
   }
-  // void loadDB() async {
-  //   await DB.init();
-  //   WidgetsFlutterBinding.ensureInitialized();
-  // }
 
   List<Task> _tasks = [];
   void refresh() async {
