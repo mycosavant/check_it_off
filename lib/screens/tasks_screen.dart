@@ -1,4 +1,5 @@
 import 'package:check_it_off/helpers/db.dart';
+import 'package:check_it_off/helpers/onboarding.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:check_it_off/models/theme_notifier.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:check_it_off/screens/add_task_screen.dart';
 import 'package:provider/Provider.dart' as Prov;
 import 'package:check_it_off/models/task_data.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TasksScreen extends StatefulWidget {
   @override
@@ -15,12 +17,26 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
 
-  Future <bool> onboarded()async{
-    var db = new DB();
-  bool _result = await db.isOnboarded();
-  return _result;
+  void onboarded() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool ran = prefs.getBool('onboarded');
+    prefs.setBool("onboarded", true);
+    try {
+      if (!ran) {
+        Navigator.of(context).pushReplacement(
+            new MaterialPageRoute(builder: (context) => new Onboarding()));
+      }
+    }
+    catch(e){
+      print('Onboarding has not run.');
+      Navigator.of(context).pushReplacement(
+          new MaterialPageRoute(builder: (context) => new Onboarding()));
+    }
   }
 
+  initState() {
+    onboarded();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,46 +95,46 @@ class _TasksScreenState extends State<TasksScreen> {
         ],
       ),
       appBar: AppBar(
-        title:  Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CircleAvatar(
-                child: Icon(
-                  Icons.check_circle,
-                  size: 35.0,
-                  color: Colors.white,
+        title: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CircleAvatar(
+                  child: Icon(
+                    Icons.check_circle,
+                    size: 35.0,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Provider.of<ThemeNotifier>(context)
+                          .getCurrentTheme()
+                          .contains('dark')
+                      ? Colors.white24
+                      : Colors.blueGrey,
+                  radius: 20.0,
                 ),
-                backgroundColor: Provider.of<ThemeNotifier>(context)
-                    .getCurrentTheme()
-                    .contains('dark')
-                    ? Colors.white24
-                    : Colors.blueGrey,
-                radius: 20.0,
-              ),
-              Text(
-                ' it Off!',
-                style: TextStyle(
-                  // color: Colors.white,
-                  fontSize: 35.0,
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.italic,
+                Text(
+                  ' it Off!',
+                  style: TextStyle(
+                    // color: Colors.white,
+                    fontSize: 35.0,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),),
+              ],
+            ),
+          ],
+        ),
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Task Order',
-              style: TextStyle(
-                fontSize: 40.0
-              ),
+              child: Text(
+                'Task Order',
+                style: TextStyle(fontSize: 40.0),
               ),
               decoration: BoxDecoration(
                 color: Colors.lightBlueAccent,
@@ -160,7 +176,6 @@ class _TasksScreenState extends State<TasksScreen> {
                 Navigator.pop(context);
               },
             ),
-
             ListTile(
               title: Text('Group By Priority'),
               onTap: () async {
