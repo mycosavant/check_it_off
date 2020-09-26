@@ -11,12 +11,13 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.0
-  provider: ^3.0.0+1
+  provider: ^4.3.2+2
   sqflite: any
-  path_provider: ^1.6.0
+  path_provider: ^1.6.18
   introduction_screen: ^1.0.9
   splashscreen: ^1.2.0
-  shared_preferences: ^0.5.10
+  shared_preferences: ^0.5.12
+  url_launcher: ^5.7.2
 
 dev_dependencies:
   flutter_test:

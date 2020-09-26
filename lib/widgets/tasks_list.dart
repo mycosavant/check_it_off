@@ -2,7 +2,7 @@ import 'package:check_it_off/helpers/db.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/widgets/task_tile.dart';
-import 'package:provider/Provider.dart' as Prov;
+import 'package:provider/Provider.dart';
 import 'package:check_it_off/models/task_data.dart';
 import 'package:check_it_off/screens/edit_task_screen.dart';
 
@@ -29,14 +29,14 @@ class _TasksListState extends State<TasksList> {
     var db = new DB();
     List<Task> _results = await db.query('system');
     _tasks = _results;
-    Prov.Provider.of<TaskData>(context).tasks=_tasks;
-    Prov.Provider.of<TaskData>(context).notify();
+    Provider.of<TaskData>(context, listen: false).tasks=_tasks;
+    Provider.of<TaskData>(context, listen: false).notify();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Prov.Consumer<TaskData>(
+    return Consumer<TaskData>(
       builder: (context, taskData, child) {
         return ListView.builder(
           itemBuilder: (context, index) {

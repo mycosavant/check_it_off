@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:provider/Provider.dart' as Prov;
+import 'package:provider/Provider.dart';
 import 'package:check_it_off/models/task_data.dart';
 
 String newTaskTitle;
@@ -30,7 +30,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     var db = new DB();
     List<Task> _results = await db.query('system');
     _tasks = _results;
-    Prov.Provider.of<TaskData>(context).tasks = _tasks;
+    Provider.of<TaskData>(context, listen: false).tasks = _tasks;
     setState(() {});
   }
 
@@ -160,7 +160,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               color: Colors.lightBlueAccent,
               onPressed: () async {
                 Task t;
-                t = Prov.Provider.of<TaskData>(context)
+                t = Provider.of<TaskData>(context, listen: false)
                     .addTask(newTaskTitle, _selectedPriority);
                 var db = new DB();
                 dynamic result = await db.insert(t);

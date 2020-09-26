@@ -5,10 +5,10 @@ import 'package:check_it_off/models/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/widgets/tasks_list.dart';
 import 'package:check_it_off/screens/add_task_screen.dart';
-import 'package:provider/Provider.dart' as Prov;
 import 'package:check_it_off/models/task_data.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TasksScreen extends StatefulWidget {
   @override
@@ -16,7 +16,6 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-
   void onboarded() async {
     final prefs = await SharedPreferences.getInstance();
     bool ran = prefs.getBool('onboarded');
@@ -26,8 +25,7 @@ class _TasksScreenState extends State<TasksScreen> {
         Navigator.of(context).pushReplacement(
             new MaterialPageRoute(builder: (context) => new Onboarding()));
       }
-    }
-    catch(e){
+    } catch (e) {
       print('Onboarding has not run.');
       Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => new Onboarding()));
@@ -37,6 +35,7 @@ class _TasksScreenState extends State<TasksScreen> {
   initState() {
     onboarded();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +68,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   width: double.infinity,
                 ),
                 Text(
-                  '${Prov.Provider.of<TaskData>(context).taskCount} Tasks',
+                  '${Provider.of<TaskData>(context, listen: false).taskCount} Tasks',
                   style: TextStyle(
                     // color: Colors.white,
                     fontSize: 24,
@@ -147,7 +146,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 var db = new DB();
                 List<Task> _results = await db.query('normal');
                 _tasks = _results;
-                Prov.Provider.of<TaskData>(context).tasks = _tasks;
+                Provider.of<TaskData>(context, listen: false).tasks = _tasks;
                 setState(() {});
                 Navigator.pop(context);
               },
@@ -159,7 +158,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 var db = new DB();
                 List<Task> _results = await db.query('aasc');
                 _tasks = _results;
-                Prov.Provider.of<TaskData>(context).tasks = _tasks;
+                Provider.of<TaskData>(context, listen: false).tasks = _tasks;
                 setState(() {});
                 Navigator.pop(context);
               },
@@ -171,7 +170,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 var db = new DB();
                 List<Task> _results = await db.query('adsc');
                 _tasks = _results;
-                Prov.Provider.of<TaskData>(context).tasks = _tasks;
+                Provider.of<TaskData>(context, listen: false).tasks = _tasks;
                 setState(() {});
                 Navigator.pop(context);
               },
@@ -183,7 +182,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 var db = new DB();
                 List<Task> _results = await db.query('asc');
                 _tasks = _results;
-                Prov.Provider.of<TaskData>(context).tasks = _tasks;
+                Provider.of<TaskData>(context, listen: false).tasks = _tasks;
                 setState(() {});
                 Navigator.pop(context);
               },
@@ -191,6 +190,23 @@ class _TasksScreenState extends State<TasksScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.lightBlueAccent,
+          child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: IconButton(
+              icon: Icon(Icons.help_center_sharp),
+              color: Colors.white,
+              iconSize: 35.0,
+              onPressed: () {
+                launch('https://www.grimshawcoding.com/');
+              },
+            ),
+          )
+        ],
+      )),
     );
   }
 }
