@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:provider/Provider.dart' as Prov;
+import 'package:provider/Provider.dart';
 import 'package:check_it_off/models/task_data.dart';
 
 class EditTaskScreen extends StatefulWidget {
@@ -40,7 +40,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     var db = new DB();
     List<Task> _results = await db.query('system');
     _tasks = _results;
-    Prov.Provider.of<TaskData>(context).tasks=_tasks;
+    Provider.of<TaskData>(context, listen: false).tasks=_tasks;
     setState(() {});
   }
   // void loadDB() async {
@@ -177,7 +177,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               ),
               color: Colors.lightBlueAccent,
               onPressed: () async {
-                Prov.Provider.of<TaskData>(context).editTask(
+                Provider.of<TaskData>(context, listen: false).editTask(
                     myTaskTitle == null ? widget.task.name : myTaskTitle,
                     widget.index,
                     _selectedPriority);
