@@ -185,6 +185,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 dynamic result = await db.update(task);
 
                 Navigator.pop(context);
+                Navigator.pop(context);
               },
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:check_it_off/models/task.dart';
+import 'package:check_it_off/widgets/task_popup.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TaskPopup taskPopup = new TaskPopup(delete: deleteCallback, edit: editCallback);
     return ListTile(
       title: Text(
         taskTitle,
@@ -50,7 +52,7 @@ class TaskTile extends StatelessWidget {
             ),
             IconButton(
               icon: getPriorityIcon(),
-              onPressed: editCallback,
+              onPressed: (){},
             ),
           ],
         ),
@@ -59,14 +61,7 @@ class TaskTile extends StatelessWidget {
         child: Wrap(
           spacing: 12,
           children: [
-            IconButton(
-              icon: new Icon(Icons.edit),
-              onPressed: editCallback,
-            ),
-            IconButton(
-              icon: new Icon(Icons.delete),
-              onPressed: deleteCallback,
-            ),
+          taskPopup
           ],
         ),
       ),

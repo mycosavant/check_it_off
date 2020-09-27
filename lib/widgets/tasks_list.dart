@@ -5,6 +5,7 @@ import 'package:check_it_off/widgets/task_tile.dart';
 import 'package:provider/Provider.dart';
 import 'package:check_it_off/models/task_data.dart';
 import 'package:check_it_off/screens/edit_task_screen.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class TasksList extends StatefulWidget {
   @override
@@ -59,11 +60,42 @@ class _TasksListState extends State<TasksList> {
                               bottom: MediaQuery.of(context).viewInsets.bottom),
                           child: EditTaskScreen(task, index),
                         )));
+
               },
               deleteCallback: () {
-                taskData.deleteTask(task);
-                var db = new DB();
-                dynamic result = db.delete(task);
+                Alert(
+                  context: context,
+                  type: AlertType.warning,
+                  title: "Confirm Delete",
+                  desc: "Are you sure you want to delete ${task.name}?",
+                  buttons: [
+                    DialogButton(
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      color: Color.fromRGBO(0, 179, 134, 1.0),
+                    ),
+                    DialogButton(
+                      child: Text(
+                        "Continue",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () async {
+                        taskData.deleteTask(task);
+                        var db = new DB();
+                        dynamic result = db.delete(task);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        },
+                      gradient: LinearGradient(colors: [
+                        Color.fromRGBO(116, 116, 191, 1.0),
+                        Color.fromRGBO(52, 138, 199, 1.0)
+                      ]),
+                    )
+                  ],
+                ).show();
 
               },
               priority: task.priority,
