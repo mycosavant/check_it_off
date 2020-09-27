@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 
 class TaskData extends ChangeNotifier {
   List<Task> tasks = [
-    // Task(name: 'Buy milk', priority: priorityLevel.Normal),
-    // Task(name: 'Buy eggs', priority: priorityLevel.Normal),
-    // Task(name: 'Buy bread', priority: priorityLevel.Normal),
   ];
 
   int get taskCount {
