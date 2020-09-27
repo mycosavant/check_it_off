@@ -1,4 +1,4 @@
-package com.grimshawcoding.check_it_off;
+package com.grimshawcoding.checkifoff;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
