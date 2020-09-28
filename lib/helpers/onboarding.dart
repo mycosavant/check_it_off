@@ -25,7 +25,7 @@ class Onboarding extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 40.0),
       child: Align(
-        child: Image.asset('assets/$assetName', height: 400,  width: 400),
+        child: Image.asset('assets/$assetName', height: 400, width: 400),
         alignment: Alignment.center,
       ),
     );
@@ -68,9 +68,23 @@ class Onboarding extends StatelessWidget {
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
-      skip: const Text('Skip'),
-      next: const Icon(Icons.arrow_forward),
-      done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+      skip: const Text(
+        'Skip',
+        style: TextStyle(
+          color: Colors.lightBlueAccent,
+        ),
+      ),
+      next: const Icon(
+        Icons.arrow_forward,
+        color: Colors.lightBlueAccent,
+      ),
+      done: const Text(
+        'Done',
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Colors.lightBlueAccent,
+        ),
+      ),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),
