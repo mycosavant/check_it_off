@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.lightBlueAccent,
           styleTextUnderTheLoader: new TextStyle(),
           photoSize: 150,
-          onClick: () => print("Flutter Egypt"),
+          onClick: (){},
           loaderColor: Colors.white,
         ),
         // TasksScreen(),

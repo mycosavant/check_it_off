@@ -39,27 +39,27 @@ class Onboarding extends StatelessWidget {
         PageViewModel(
           title: "Check It Off!",
           body: "View your list of things to do.",
-          image: _buildImage('onboarding/onboarding1.png'),
+          image: _buildImage('onboarding/onboarding1.jpg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: "Add A Task",
           body: "Give the task a name and priority.",
-          image: _buildImage('onboarding/onboarding2.png'),
+          image: _buildImage('onboarding/onboarding2.jpg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: "Edit Existing Tasks",
           body:
-              "Need to change a task's name?  No problem simply click the edit button on the main page and alter the name and/or priority.",
-          image: _buildImage('onboarding/onboarding3.png'),
+              "Need to change or remove it?  No problem simply click the menu button and edit or delete your task.",
+          image: _buildImage('onboarding/onboarding3.jpg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: "Change The Task Order",
           body:
               "You can order by the order entered, alphabetic, reverse alphabetic, and by priority grouping.",
-          image: _buildImage('onboarding/onboarding4.png'),
+          image: _buildImage('onboarding/onboarding4.jpg'),
           decoration: pageDecoration,
         ),
       ],
