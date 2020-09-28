@@ -71,7 +71,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   '${Provider.of<TaskData>(context, listen: true).taskCount} Tasks',
                   style: TextStyle(
                     // color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -99,26 +99,34 @@ class _TasksScreenState extends State<TasksScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                CircleAvatar(
-                  child: Icon(
-                    Icons.check_circle,
-                    size: 35.0,
-                    color: Colors.white,
-                  ),
-                  backgroundColor: Provider.of<ThemeNotifier>(context)
-                          .getCurrentTheme()
-                          .contains('dark')
-                      ? Colors.white24
-                      : Colors.blueGrey,
-                  radius: 20.0,
-                ),
-                Text(
-                  ' it Off!',
-                  style: TextStyle(
-                    // color: Colors.white,
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.italic,
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CircleAvatar(
+                        child: Icon(
+                          Icons.check_circle,
+                          size: 35.0,
+                          color: Colors.white,
+                        ),
+                        backgroundColor: Provider.of<ThemeNotifier>(context)
+                                .getCurrentTheme()
+                                .contains('dark')
+                            ? Colors.white24
+                            : Colors.blueGrey,
+                        radius: 20.0,
+                      ),
+                      Text(
+                        ' Check It Off Pro',
+                        style: TextStyle(
+                          // color: Colors.white,
+                          // fontSize: 30.0,
+                          fontWeight: FontWeight.w700,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
