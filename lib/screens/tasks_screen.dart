@@ -16,6 +16,17 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
+  void setOrder(String order) async {
+    List<Task> _tasks = [];
+    var db = new DB();
+    List<Task> _results = await db.query(order);
+    _tasks = _results;
+    Provider.of<TaskData>(context, listen: false).tasks = _tasks;
+    setState(() {});
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('order', order);
+  }
+
   void onboarded() async {
     final prefs = await SharedPreferences.getInstance();
     bool ran = prefs.getBool('onboarded');
@@ -32,8 +43,23 @@ class _TasksScreenState extends State<TasksScreen> {
     }
   }
 
+  void getOrder() async {
+    final prefs = await SharedPreferences.getInstance();
+    String order = prefs.getString('order');
+    try {
+      if (order != null) {
+        setOrder(order);
+      }
+    } catch (e) {
+      print('Order not set, setting default');
+      prefs.setString('order', 'normal');
+      setOrder('normal');
+    }
+  }
+
   initState() {
     onboarded();
+    getOrder();
   }
 
   @override
@@ -150,48 +176,28 @@ class _TasksScreenState extends State<TasksScreen> {
             ListTile(
               title: Text('Order Entered'),
               onTap: () async {
-                List<Task> _tasks = [];
-                var db = new DB();
-                List<Task> _results = await db.query('normal');
-                _tasks = _results;
-                Provider.of<TaskData>(context, listen: false).tasks = _tasks;
-                setState(() {});
+                setOrder('normal');
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('Alphabetic'),
               onTap: () async {
-                List<Task> _tasks = [];
-                var db = new DB();
-                List<Task> _results = await db.query('aasc');
-                _tasks = _results;
-                Provider.of<TaskData>(context, listen: false).tasks = _tasks;
-                setState(() {});
+                setOrder('aasc');
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('Reverse Alphabetic'),
               onTap: () async {
-                List<Task> _tasks = [];
-                var db = new DB();
-                List<Task> _results = await db.query('adsc');
-                _tasks = _results;
-                Provider.of<TaskData>(context, listen: false).tasks = _tasks;
-                setState(() {});
+                setOrder('adsc');
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('Group By Priority'),
               onTap: () async {
-                List<Task> _tasks = [];
-                var db = new DB();
-                List<Task> _results = await db.query('asc');
-                _tasks = _results;
-                Provider.of<TaskData>(context, listen: false).tasks = _tasks;
-                setState(() {});
+                setOrder('asc');
                 Navigator.pop(context);
               },
             ),
@@ -199,22 +205,22 @@ class _TasksScreenState extends State<TasksScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.lightBlueAccent,
+          color: Colors.lightBlueAccent,
           child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15.0),
-            child: IconButton(
-              icon: Icon(Icons.help_center_sharp),
-              color: Colors.white,
-              iconSize: 35.0,
-              onPressed: () {
-                launch('https://www.grimshawcoding.com/');
-              },
-            ),
-          )
-        ],
-      )),
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: IconButton(
+                  icon: Icon(Icons.help_center_sharp),
+                  color: Colors.white,
+                  iconSize: 35.0,
+                  onPressed: () {
+                    launch('https://www.grimshawcoding.com/');
+                  },
+                ),
+              )
+            ],
+          )),
     );
   }
 }
