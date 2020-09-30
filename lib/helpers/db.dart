@@ -46,17 +46,17 @@ class DB {
     var dbClient = await db;
 
     List<Map> list = await dbClient.rawQuery('SELECT * FROM Task');
-    List<Task> employees = new List();
+    List<Task> tasks = new List();
     for (int i = 0; i < list.length; i++) {
       var task = new Task(
           id: list[i]["id"],
           name: list[i]["name"],
           isDone: list[i]["isDone"],
           priority: list[i]["priority"]);
-      employees.add(task);
+      tasks.add(task);
     }
-    print(employees.length);
-    return employees;
+    print(tasks.length);
+    return tasks;
   }
 
   Future<int> delete(Task task) async {
@@ -97,7 +97,7 @@ class DB {
     List<Task> t = new List();
     for (int i = 0; i < list.length; i++) {
       var id = list[i]["id"];
-      var name = list[i]["name"];
+      var name = list[i]["name"].toString();
       var isDone = list[i]["isDone"] == 1 ? true : false;
       var priority = ((list[i]['priority'].toString().contains('High'))
           ? priorityLevel.High
