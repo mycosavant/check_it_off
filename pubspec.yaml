@@ -19,6 +19,7 @@ dependencies:
   shared_preferences: ^0.5.12
   url_launcher: ^5.7.2
   rflutter_alert: ^1.1.0
+  add_2_calendar: ^1.4.0
 
 dev_dependencies:
   flutter_test:
