@@ -7,13 +7,13 @@ class CalendarHelper{
     Add2Calendar.addEvent2Cal(e);
   }
 
-  Event addEventForCalendar(String title, String description, DateTime startDate, DateTime endDate){
+  Event addEventForCalendar(String title, String description, DateTime dueDate,){
     return Event(
       title: title,
       description: description,
       location: '',
-      startDate: startDate,
-      endDate: endDate,
+      startDate: dueDate,
+      endDate: dueDate,
       timeZone: '',
       allDay: true
     );

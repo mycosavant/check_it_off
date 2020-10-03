@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'dart:io' as io;
 
 class DB {
+  int version = 2;
   static final DB _instance = new DB.internal();
 
   factory DB() => _instance;
@@ -25,14 +26,40 @@ class DB {
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "main.db");
-    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var theDb = await openDatabase(path,
+        version: version, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return theDb;
   }
 
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
-    await db.execute(
-        'CREATE TABLE Task (id INTEGER UNIQUE PRIMARY KEY NOT NULL, name STRING, isDone INT, priority STRING)');
+    await db.execute('''CREATE TABLE Task 
+            (id INTEGER UNIQUE PRIMARY KEY NOT NULL, 
+            name STRING, 
+            isDone INT, 
+            priority STRING,
+            recurring INT,
+            numberOfRecurrences STRING,
+            interval STRING,
+            dueDate STRING
+            )
+            ''');
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    // When creating the db, create the table
+    await db.execute('''
+          alter table Task add column recurring integer default 0;
+        ''');
+    await db.execute('''
+          alter table Task add column numberOfRecurrences String default '0';
+        ''');
+    await db.execute('''
+          alter table Task add column interval String default 'None';
+        ''');
+    await db.execute('''
+          alter table Task add column dueDate String default '';
+        ''');
   }
 
   Future<int> insert(Task task) async {
@@ -86,11 +113,9 @@ class DB {
       sql = '$sql ORDER BY priority';
     } else if (order == 'dsc') {
       sql = '$sql ORDER BY priority DESC';
-    }
-    else if (order == 'aasc') {
+    } else if (order == 'aasc') {
       sql = '$sql ORDER BY name';
-    }
-    else if (order == 'adsc') {
+    } else if (order == 'adsc') {
       sql = '$sql ORDER BY name DESC';
     }
     List<Map> list = await dbClient.rawQuery(sql);
