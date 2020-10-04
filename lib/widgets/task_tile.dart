@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class TaskTile extends StatelessWidget {
   final bool isChecked;
-  final String taskTitle;
+  final Task task;
   final Function checkboxCallback;
   final Function editCallback;
   final Function deleteCallback;
@@ -14,7 +14,7 @@ class TaskTile extends StatelessWidget {
 
   TaskTile({
     this.isChecked,
-    this.taskTitle,
+    this.task,
     this.checkboxCallback,
     this.editCallback,
     this.deleteCallback,
@@ -32,12 +32,22 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TaskPopup taskPopup = new TaskPopup(delete: deleteCallback, edit: editCallback);
+    TaskPopup taskPopup =
+        new TaskPopup(delete: deleteCallback, edit: editCallback);
     return ListTile(
       title: Text(
-        taskTitle,
+        task.name,
         style: TextStyle(
             fontSize: 20,
+            color: (task.dueDate != null
+                ? (task.dueDate != ''
+                    ? (DateTime.parse(task.dueDate)
+                                .difference(DateTime.now()) <=
+                            Duration(days: 0)
+                        ? Colors.red
+                        : Colors.lightBlueAccent)
+                    : Colors.lightBlueAccent)
+                : Colors.lightBlueAccent),
             fontWeight: FontWeight.w400,
             decoration: isChecked ? TextDecoration.lineThrough : null),
       ),
@@ -52,7 +62,7 @@ class TaskTile extends StatelessWidget {
             ),
             IconButton(
               icon: getPriorityIcon(),
-              onPressed: (){},
+              onPressed: () {},
             ),
           ],
         ),
@@ -60,9 +70,7 @@ class TaskTile extends StatelessWidget {
       trailing: Container(
         child: Wrap(
           spacing: 12,
-          children: [
-          taskPopup
-          ],
+          children: [taskPopup],
         ),
       ),
     );

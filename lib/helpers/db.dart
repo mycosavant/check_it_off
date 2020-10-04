@@ -39,7 +39,7 @@ class DB {
             isDone INT, 
             priority STRING,
             recurring INT,
-            numberOfRecurrences STRING,
+            numberOfRecurrences INT,
             interval STRING,
             dueDate STRING
             )
@@ -52,7 +52,7 @@ class DB {
           alter table Task add column recurring integer default 0;
         ''');
     await db.execute('''
-          alter table Task add column numberOfRecurrences String default '0';
+          alter table Task add column numberOfRecurrences integer default 0;
         ''');
     await db.execute('''
           alter table Task add column interval String default 'None';
@@ -79,7 +79,19 @@ class DB {
           id: list[i]["id"],
           name: list[i]["name"],
           isDone: list[i]["isDone"],
-          priority: list[i]["priority"]);
+          priority: list[i]["priority"],
+          recurring: ((list[i]['recurring'] == 1) ? true : false),
+          numberOfRecurrences: (int.parse(list[i]['numberOfRecurrences'])),
+          interval: (list[i]['priority'].toString().contains('Daily'))
+              ? recurrenceInterval.Daily
+              : (list[i]['interval'].toString().contains('Weekly'))
+                  ? recurrenceInterval.Weekly
+                  : (list[i]['interval'].toString().contains('Monthly'))
+                      ? recurrenceInterval.Monthly
+                      : (list[i]['interval'].toString().contains('Yearly'))
+                          ? recurrenceInterval.Yearly
+                          : recurrenceInterval.None,
+          dueDate: list[i]['dueDate']);
       tasks.add(task);
     }
     print(tasks.length);
@@ -129,7 +141,28 @@ class DB {
           : (list[i]['priority'].toString().contains('Low'))
               ? priorityLevel.Low
               : priorityLevel.Normal);
-      Task task = Task(id: id, name: name, isDone: isDone, priority: priority);
+
+      var recurring = ((list[i]['recurring'] == 1) ? true : false);
+      var numberOfRecurrence = (int.parse(list[i]['numberOfRecurrences']));
+      var interval = (list[i]['priority'].toString().contains('Daily'))
+          ? recurrenceInterval.Daily
+          : (list[i]['interval'].toString().contains('Weekly'))
+              ? recurrenceInterval.Weekly
+              : (list[i]['interval'].toString().contains('Monthly'))
+                  ? recurrenceInterval.Monthly
+                  : (list[i]['interval'].toString().contains('Yearly'))
+                      ? recurrenceInterval.Yearly
+                      : recurrenceInterval.None;
+      var dueDate = list[i]['dueDate'];
+      Task task = Task(
+          id: id,
+          name: name,
+          isDone: isDone,
+          priority: priority,
+          recurring: recurring,
+          numberOfRecurrences: numberOfRecurrence,
+          dueDate: dueDate,
+          interval: interval);
       t.add(task);
     }
     print(t.length);

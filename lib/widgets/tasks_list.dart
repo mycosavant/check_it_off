@@ -43,7 +43,7 @@ class _TasksListState extends State<TasksList> {
           itemBuilder: (context, index) {
             final task = taskData.tasks[index];
             return TaskTile(
-              taskTitle: task.name,
+              task: task,
               isChecked: task.isDone,
               checkboxCallback: (checkboxState) async {
                 taskData.updateTask(task);
