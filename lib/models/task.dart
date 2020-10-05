@@ -1,7 +1,8 @@
+
 import 'package:check_it_off/helpers/db.dart';
 
 enum priorityLevel { High, Normal, Low }
-enum recurrenceInterval { None, Daily, Weekly, Monthly, Yearly }
+enum recurrenceInterval { None, Daily, Weekly, Monthly }
 
 class Task {
   var id;
@@ -22,7 +23,7 @@ class Task {
       this.priority,
       this.recurring=false,
       this.numberOfRecurrences=0,
-      this.interval=recurrenceInterval.None,
+      this.interval,
       this.dueDate=''});
 
   void toggleDone() {
@@ -61,9 +62,7 @@ class Task {
                 ? recurrenceInterval.Weekly
                 : (map['interval'].toString().contains('Monthly'))
                     ? recurrenceInterval.Monthly
-                    : (map['interval'].toString().contains('Yearly'))
-                        ? recurrenceInterval.Yearly
-                        : recurrenceInterval.None,
+                    :  recurrenceInterval.None,
         dueDate: map['dueDate']);
   }
 }

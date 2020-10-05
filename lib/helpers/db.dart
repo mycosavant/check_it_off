@@ -55,7 +55,7 @@ class DB {
           alter table Task add column numberOfRecurrences integer default 0;
         ''');
     await db.execute('''
-          alter table Task add column interval String default 'None';
+          alter table Task add column interval String default '';
         ''');
     await db.execute('''
           alter table Task add column dueDate String default '';
@@ -88,9 +88,7 @@ class DB {
                   ? recurrenceInterval.Weekly
                   : (list[i]['interval'].toString().contains('Monthly'))
                       ? recurrenceInterval.Monthly
-                      : (list[i]['interval'].toString().contains('Yearly'))
-                          ? recurrenceInterval.Yearly
-                          : recurrenceInterval.None,
+                      : recurrenceInterval.None,
           dueDate: list[i]['dueDate']);
       tasks.add(task);
     }
@@ -143,16 +141,14 @@ class DB {
               : priorityLevel.Normal);
 
       var recurring = ((list[i]['recurring'] == 1) ? true : false);
-      var numberOfRecurrence = (int.parse(list[i]['numberOfRecurrences']));
+      var numberOfRecurrence = (list[i]['numberOfRecurrences']);
       var interval = (list[i]['priority'].toString().contains('Daily'))
           ? recurrenceInterval.Daily
           : (list[i]['interval'].toString().contains('Weekly'))
               ? recurrenceInterval.Weekly
               : (list[i]['interval'].toString().contains('Monthly'))
                   ? recurrenceInterval.Monthly
-                  : (list[i]['interval'].toString().contains('Yearly'))
-                      ? recurrenceInterval.Yearly
-                      : recurrenceInterval.None;
+                  : recurrenceInterval.None;
       var dueDate = list[i]['dueDate'];
       Task task = Task(
           id: id,

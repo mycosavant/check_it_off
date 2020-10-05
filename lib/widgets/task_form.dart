@@ -93,11 +93,10 @@ class _TaskFormState extends State<TaskForm> {
   List<String> priorityList = ['High', 'Normal', 'Low'];
   List<String> yesNoList = ['Yes', 'No'];
   List<String> recurringIntervalList = [
-    'None',
     'Daily',
     'Weekly',
     'Monthly',
-    'Yearly'
+    'None'
   ];
 
   NumberPicker integerNumberPicker;
@@ -210,11 +209,12 @@ class _TaskFormState extends State<TaskForm> {
             Toggle("Priority", priorityList, (index) {
               _selectedPriority = priorityList[index];
             }, priorityList.indexOf(_selectedPriority)),
+
             Toggle("Recurring", recurringIntervalList, (index) {
               setState(() {
                 _selectedInterval = recurringIntervalList[index];
-                // _showRecurranceOptions =
-                //     _selectedInterval.contains('None') ? false : true;
+                _showRecurranceOptions =
+                    _selectedInterval.contains('None') ? false : true;
               });
             }, recurringIntervalList.indexOf(_selectedInterval)),
             _showRecurranceOptions
@@ -227,7 +227,7 @@ class _TaskFormState extends State<TaskForm> {
                       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                       child: Column(
                         children: [
-                          Text('Number of times to Recur',
+                          Text('Frequency Interval (Every x Days/Weeks/Months)',
                               style: TextStyle(fontSize: 25.0)),
                           new FlatButton(
                             color: Colors.lightBlueAccent,

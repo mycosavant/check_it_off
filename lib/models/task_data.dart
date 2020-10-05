@@ -1,3 +1,4 @@
+import 'package:add_to_calendar/add_to_calendar.dart';
 import 'package:check_it_off/helpers/calendar.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:flutter/foundation.dart';
@@ -34,30 +35,41 @@ class TaskData extends ChangeNotifier {
             ? recurrenceInterval.Weekly
             : (interval.toString().contains('Monthly'))
                 ? recurrenceInterval.Monthly
-                : (interval.toString().contains('Yearly'))
-                    ? recurrenceInterval.Yearly
-                    : recurrenceInterval.None;
+                : recurrenceInterval.None;
     final task = Task(
         name: newTaskTitle,
         priority: newPriority,
         interval: newInterval,
-        recurring: newInterval.toString().contains('None') ? false : true,
+        recurring: newInterval.toString().contains('') ? false : true,
         dueDate: (dueDate == '' && addToCalendar
             ? DateTime.now().toString()
             : dueDate),
         numberOfRecurrences: numberOfRecurrences);
-    // if (addToCalendar) {
-    //   CalendarHelper ch = new CalendarHelper();
-    //   ch.addEventForCalendar(newTaskTitle, newTaskTitle,
-    //       dueDate == null ? DateTime.now() : dueDate == '' ? DateTime.now() : DateTime.parse(dueDate));
-    // }
+    if (addToCalendar) {
+      AddToCalendar.addToCalendar(
+        title: newTaskTitle,
+        startTime: (dueDate == null ? DateTime.now() : DateTime.parse(dueDate)),
+        endTime: null,
+        location: '',
+        description: newTaskTitle,
+        isAllDay: true,
+        frequency: numberOfRecurrences == 0 ? null : numberOfRecurrences,
+        frequencyType: interval.toString().contains('Weekly')
+            ? FrequencyType.WEEKLY
+            : interval.toString().contains('Daily')
+                ? FrequencyType.DAILY
+                : interval.toString().contains('Monthly')
+                    ? FrequencyType.MONTHLY
+                    : null,
+      );
+    }
     tasks.add(task);
     notifyListeners();
     return task;
   }
 
-  void editTask({
-      String theTaskTitle,
+  void editTask(
+      {String theTaskTitle,
       int index,
       String selectedPriority,
       String interval,
@@ -79,14 +91,12 @@ class TaskData extends ChangeNotifier {
             ? recurrenceInterval.Weekly
             : (interval.toString().contains('Monthly'))
                 ? recurrenceInterval.Monthly
-                : (interval.toString().contains('Yearly'))
-                    ? recurrenceInterval.Yearly
-                    : recurrenceInterval.None;
+                : recurrenceInterval.None;
     final task = Task(
         name: theTaskTitle,
         priority: editPriority,
         interval: newInterval,
-        recurring: newInterval.toString().contains('None') ? false : true,
+        recurring: newInterval.toString().contains('') ? false : true,
         dueDate: (dueDate == '' && addToCalendar
             ? DateTime.now().toString()
             : dueDate),
@@ -99,8 +109,22 @@ class TaskData extends ChangeNotifier {
     tasks[index].recurring = task.recurring;
     tasks[index].numberOfRecurrences = task.numberOfRecurrences;
     tasks[index].id = task.id;
-
-
+    AddToCalendar.addToCalendar(
+      title: task.name,
+      startTime: (dueDate == null ? DateTime.now() : DateTime.parse(dueDate)),
+      endTime: null,
+      location: '',
+      description: task.name,
+      isAllDay: true,
+      frequency: numberOfRecurrences == 0 ? null : numberOfRecurrences,
+      frequencyType: interval.toString().contains('Weekly')
+          ? FrequencyType.WEEKLY
+          : interval.toString().contains('Daily')
+          ? FrequencyType.DAILY
+          : interval.toString().contains('Monthly')
+          ? FrequencyType.MONTHLY
+          : null,
+    );
     notifyListeners();
   }
 

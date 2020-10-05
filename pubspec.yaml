@@ -23,6 +23,7 @@ dependencies:
   toggle_switch: ^0.1.8
   numberpicker: ^1.2.1
   device_calendar: ^3.1.0
+  add_to_calendar: ^1.2.0+1
 
 dev_dependencies:
   flutter_test:
