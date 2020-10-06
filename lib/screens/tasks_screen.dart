@@ -201,6 +201,20 @@ class _TasksScreenState extends State<TasksScreen> {
                 Navigator.pop(context);
               },
             ),
+            ListTile(
+              title: Text('Due Date'),
+              onTap: () async {
+                setOrder('dueasc');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Reverse Due Date'),
+              onTap: () async {
+                setOrder('duedsc');
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),

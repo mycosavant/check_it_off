@@ -127,6 +127,10 @@ class DB {
       sql = '$sql ORDER BY name';
     } else if (order == 'adsc') {
       sql = '$sql ORDER BY name DESC';
+    } else if (order == 'dueasc') {
+      sql = '$sql ORDER BY dueDate';
+    } else if (order == 'duedsc') {
+      sql = '$sql ORDER BY dueDate DESC';
     }
     List<Map> list = await dbClient.rawQuery(sql);
     List<Task> t = new List();
