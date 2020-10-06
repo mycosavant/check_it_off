@@ -1,6 +1,6 @@
 import 'package:check_it_off/models/task.dart';
 import 'package:check_it_off/widgets/task_popup.dart';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +11,7 @@ class TaskTile extends StatelessWidget {
   final Function editCallback;
   final Function deleteCallback;
   final priorityLevel priority;
+  final Function addCallback;
 
   TaskTile({
     this.isChecked,
@@ -19,6 +20,7 @@ class TaskTile extends StatelessWidget {
     this.editCallback,
     this.deleteCallback,
     this.priority,
+    this.addCallback,
   });
 
   Icon getPriorityIcon() {
@@ -32,11 +34,13 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TaskPopup taskPopup =
-        new TaskPopup(delete: deleteCallback, edit: editCallback);
+    DateFormat formatter = DateFormat('MM/dd/yyyy');
+    var finaldate = formatter.format(DateTime.parse(task.dueDate));
+    TaskPopup taskPopup = new TaskPopup(
+        delete: deleteCallback, edit: editCallback, add: addCallback);
     return ListTile(
       title: Text(
-        task.name,
+        '${task.name} \n${finaldate}',
         style: TextStyle(
             fontSize: 20,
             color: (task.dueDate != null

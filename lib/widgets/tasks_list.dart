@@ -1,3 +1,4 @@
+import 'package:add_to_calendar/add_to_calendar.dart';
 import 'package:check_it_off/helpers/db.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ class TasksList extends StatefulWidget {
 }
 
 class _TasksListState extends State<TasksList> {
-
   void initState() {
     super.initState();
     // loadDB();
@@ -26,13 +26,31 @@ class _TasksListState extends State<TasksList> {
   // }
 
   List<Task> _tasks = [];
-  void refresh([order='normal']) async {
+  void refresh([order = 'normal']) async {
     var db = new DB();
     List<Task> _results = await db.query('system');
     _tasks = _results;
-    Provider.of<TaskData>(context, listen: false).tasks=_tasks;
+    Provider.of<TaskData>(context, listen: false).tasks = _tasks;
     Provider.of<TaskData>(context, listen: false).notify();
     setState(() {});
+  }
+
+  String addMonth(String date) {
+    return new DateTime(DateTime.parse(date).year,
+            DateTime.parse(date).month + 1, DateTime.parse(date).day)
+        .toString();
+  }
+
+  String addWeek(String date) {
+    return new DateTime(DateTime.parse(date).year, DateTime.parse(date).month,
+            DateTime.parse(date).day + 7)
+        .toString();
+  }
+
+  String addDay(String date) {
+    return new DateTime(DateTime.parse(date).year, DateTime.parse(date).month,
+            DateTime.parse(date).day + 1)
+        .toString();
   }
 
   @override
@@ -47,8 +65,45 @@ class _TasksListState extends State<TasksList> {
               isChecked: task.isDone,
               checkboxCallback: (checkboxState) async {
                 taskData.updateTask(task);
+                task.isDone = task.isDone ? true : false;
                 var db = new DB();
                 dynamic result = await db.update(task);
+                if (task.recurring && task.isDone) {
+                  String recurDate;
+                  recurDate =
+                      task.interval.toString().toLowerCase().contains('daily')
+                          ? addDay(task.dueDate)
+                          : task.interval
+                                  .toString()
+                                  .toLowerCase()
+                                  .contains('weekly')
+                              ? addWeek(task.dueDate)
+                              : task.interval
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains('monthly')
+                                  ? addMonth(task.dueDate)
+                                  : null;
+                  Task recurringTask = Task(
+                    name: task.name,
+                    priority: task.priority,
+                    isDone: false,
+                    interval: task.interval,
+                    numberOfRecurrences: task.numberOfRecurrences,
+                    recurring: task.recurring,
+                    dueDate: recurDate.toString(),
+                  );
+                  Task t;
+                  t = Provider.of<TaskData>(context, listen: false).addTask(
+                      newTaskTitle: recurringTask.name,
+                      priority: recurringTask.priority.toString(),
+                      interval: recurringTask.interval.toString(),
+                      dueDate: recurringTask.dueDate,
+                      numberOfRecurrences: recurringTask.numberOfRecurrences,
+                      addToCalendar: false);
+                  var db = new DB();
+                  dynamic result = await db.insert(t);
+                }
               },
               editCallback: () {
                 showModalBottomSheet(
@@ -60,7 +115,6 @@ class _TasksListState extends State<TasksList> {
                               bottom: MediaQuery.of(context).viewInsets.bottom),
                           child: EditTaskScreen(task, index),
                         )));
-
               },
               deleteCallback: () {
                 Alert(
@@ -88,7 +142,7 @@ class _TasksListState extends State<TasksList> {
                         dynamic result = db.delete(task);
                         Navigator.pop(context);
                         Navigator.pop(context);
-                        },
+                      },
                       gradient: LinearGradient(colors: [
                         Color.fromRGBO(116, 116, 191, 1.0),
                         Color.fromRGBO(52, 138, 199, 1.0)
@@ -96,7 +150,28 @@ class _TasksListState extends State<TasksList> {
                     )
                   ],
                 ).show();
-
+              },
+              addCallback: () {
+                AddToCalendar.addToCalendar(
+                  title: task.name,
+                  startTime: (task.dueDate == null
+                      ? DateTime.now()
+                      : DateTime.parse(task.dueDate)),
+                  endTime: null,
+                  location: '',
+                  description: task.name,
+                  isAllDay: true,
+                  frequency: task.numberOfRecurrences == 0
+                      ? null
+                      : task.numberOfRecurrences,
+                  frequencyType: task.interval.toString().contains('Weekly')
+                      ? FrequencyType.WEEKLY
+                      : task.interval.toString().contains('Daily')
+                          ? FrequencyType.DAILY
+                          : task.interval.toString().contains('Monthly')
+                              ? FrequencyType.MONTHLY
+                              : null,
+                );
               },
               priority: task.priority,
             );

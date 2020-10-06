@@ -40,29 +40,11 @@ class TaskData extends ChangeNotifier {
         name: newTaskTitle,
         priority: newPriority,
         interval: newInterval,
-        recurring: newInterval.toString().contains('') ? false : true,
-        dueDate: (dueDate == '' && addToCalendar
+        recurring: newInterval.toString().contains('None') ? false : true,
+        dueDate: (dueDate == ''
             ? DateTime.now().toString()
             : dueDate),
         numberOfRecurrences: numberOfRecurrences);
-    if (addToCalendar) {
-      AddToCalendar.addToCalendar(
-        title: newTaskTitle,
-        startTime: (dueDate == null ? DateTime.now() : DateTime.parse(dueDate)),
-        endTime: null,
-        location: '',
-        description: newTaskTitle,
-        isAllDay: true,
-        frequency: numberOfRecurrences == 0 ? null : numberOfRecurrences,
-        frequencyType: interval.toString().contains('Weekly')
-            ? FrequencyType.WEEKLY
-            : interval.toString().contains('Daily')
-                ? FrequencyType.DAILY
-                : interval.toString().contains('Monthly')
-                    ? FrequencyType.MONTHLY
-                    : null,
-      );
-    }
     tasks.add(task);
     notifyListeners();
     return task;
@@ -96,8 +78,8 @@ class TaskData extends ChangeNotifier {
         name: theTaskTitle,
         priority: editPriority,
         interval: newInterval,
-        recurring: newInterval.toString().contains('') ? false : true,
-        dueDate: (dueDate == '' && addToCalendar
+        recurring: newInterval.toString().contains('None') ? false : true,
+        dueDate: (dueDate == ''
             ? DateTime.now().toString()
             : dueDate),
         numberOfRecurrences: numberOfRecurrences);
@@ -109,22 +91,6 @@ class TaskData extends ChangeNotifier {
     tasks[index].recurring = task.recurring;
     tasks[index].numberOfRecurrences = task.numberOfRecurrences;
     tasks[index].id = task.id;
-    AddToCalendar.addToCalendar(
-      title: task.name,
-      startTime: (dueDate == null ? DateTime.now() : DateTime.parse(dueDate)),
-      endTime: null,
-      location: '',
-      description: task.name,
-      isAllDay: true,
-      frequency: numberOfRecurrences == 0 ? null : numberOfRecurrences,
-      frequencyType: interval.toString().contains('Weekly')
-          ? FrequencyType.WEEKLY
-          : interval.toString().contains('Daily')
-          ? FrequencyType.DAILY
-          : interval.toString().contains('Monthly')
-          ? FrequencyType.MONTHLY
-          : null,
-    );
     notifyListeners();
   }
 

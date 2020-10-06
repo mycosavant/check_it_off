@@ -64,14 +64,19 @@ class _TaskFormState extends State<TaskForm> {
             : DateTime.now())
         : DateTime.now());
     DateFormat formatter = DateFormat('MM/dd/yyyy');
-    finaldate = widget.mode == 'add'
-        ? ''
-        : widget.dueDate == ''
-            ? ''
-            : formatter.format(initialDate);
+    _setDate = initialDate.toString();
+    finaldate = formatter.format(initialDate);
+    _showRecurranceOptions = true;
+    // = widget.dueDate != null
+    //     ? (widget.dueDate != ''
+    //     ? true : false) : false;
+    // _showRecurranceFrequencyOptions = widget.dueDate != null
+    // ? (widget.dueDate != ''
+    // ? true : false) : false;
   }
 
   bool _showRecurranceOptions = false;
+  bool _showRecurranceFrequencyOptions = false;
   var finaldate;
   String _setDate;
 
@@ -92,12 +97,7 @@ class _TaskFormState extends State<TaskForm> {
 
   List<String> priorityList = ['High', 'Normal', 'Low'];
   List<String> yesNoList = ['Yes', 'No'];
-  List<String> recurringIntervalList = [
-    'Daily',
-    'Weekly',
-    'Monthly',
-    'None'
-  ];
+  List<String> recurringIntervalList = ['Daily', 'Weekly', 'Monthly', 'None'];
 
   NumberPicker integerNumberPicker;
 
@@ -109,6 +109,7 @@ class _TaskFormState extends State<TaskForm> {
         finaldate = formatter.format(order);
         initialDate = order;
         _setDate = order.toString();
+        _showRecurranceOptions = true;
       }
     });
   }
@@ -209,43 +210,6 @@ class _TaskFormState extends State<TaskForm> {
             Toggle("Priority", priorityList, (index) {
               _selectedPriority = priorityList[index];
             }, priorityList.indexOf(_selectedPriority)),
-
-            Toggle("Recurring", recurringIntervalList, (index) {
-              setState(() {
-                _selectedInterval = recurringIntervalList[index];
-                _showRecurranceOptions =
-                    _selectedInterval.contains('None') ? false : true;
-              });
-            }, recurringIntervalList.indexOf(_selectedInterval)),
-            _showRecurranceOptions
-                ? Container(
-                    // height: 150.0,
-                    alignment: Alignment.center,
-                    // color: Colors.lightBlueAccent,
-                    // child: Platform.isIOS ? iOSPicker() : androidDropdown(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Column(
-                        children: [
-                          Text('Frequency Interval (Every x Days/Weeks/Months)',
-                              style: TextStyle(fontSize: 25.0)),
-                          new FlatButton(
-                            color: Colors.lightBlueAccent,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(15.0)),
-                            onPressed: () => _showIntDialog(),
-                            child: new Text(
-                              _selectedNumberOfRecurrences.toString(),
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : Container(),
             new FlatButton(
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(15.0)),
@@ -269,9 +233,61 @@ class _TaskFormState extends State<TaskForm> {
                       ),
               ),
             ),
-            Toggle("Add To Calendar", yesNoList, (index) {
-              _selectedAddToCalendar = yesNoList[index];
-            }, yesNoList.indexOf('No')),
+            _showRecurranceOptions
+                ? Toggle("Recurring", recurringIntervalList, (index) {
+                    setState(() {
+                      _selectedInterval = recurringIntervalList[index];
+                      _selectedNumberOfRecurrences =
+                          _selectedInterval.toString().contains('None') ? 0 : 1;
+                      _selectedRecurring =
+                          _selectedInterval.toString().contains('None')
+                              ? 'No'
+                              : 'Yes';
+                      // _showRecurranceFrequencyOptions =
+                      if (finaldate == '') {
+                        if (!_selectedInterval.contains('None')) {
+                          DateFormat formatter = DateFormat('MM/dd/yyyy');
+                          DateTime order = DateTime.now();
+                          finaldate = formatter.format(order);
+                          initialDate = order;
+                          _setDate = order.toString();
+                        }
+                      }
+                      _selectedInterval.contains('None') ? false : true;
+                    });
+                  }, recurringIntervalList.indexOf(_selectedInterval))
+                : Container(),
+            // _showRecurranceOptions && _showRecurranceFrequencyOptions
+            //     ? Container(
+            //   // height: 150.0,
+            //   alignment: Alignment.center,
+            //   // color: Colors.lightBlueAccent,
+            //   // child: Platform.isIOS ? iOSPicker() : androidDropdown(),
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+            //     child: Column(
+            //       children: [
+            //         Text('Frequency Interval',
+            //             style: TextStyle(fontSize: 25.0,)),
+            //         Text('(Every x Days/Weeks/Months)',
+            //             style: TextStyle(fontSize: 25.0,)),
+            //         new FlatButton(
+            //           color: Colors.lightBlueAccent,
+            //           shape: new RoundedRectangleBorder(
+            //               borderRadius: new BorderRadius.circular(15.0)),
+            //           onPressed: () => _showIntDialog(),
+            //           child: new Text(
+            //             _selectedNumberOfRecurrences.toString(),
+            //             style: TextStyle(
+            //               color: Colors.white,
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // )
+            //     : Container(),
             FlatButton(
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(15.0)),

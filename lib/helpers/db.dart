@@ -92,7 +92,7 @@ class DB {
           dueDate: list[i]['dueDate']);
       tasks.add(task);
     }
-    print(tasks.length);
+    // print(tasks.length);
     return tasks;
   }
 
@@ -161,7 +161,7 @@ class DB {
           interval: interval);
       t.add(task);
     }
-    print(t.length);
+    // print(t.length);
     return t;
   }
 }

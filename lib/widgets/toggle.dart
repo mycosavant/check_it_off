@@ -26,6 +26,7 @@ class _ToggleState extends State<Toggle> {
           children: [
             Text(widget.title, style: TextStyle(fontSize: 25.0),),
             ToggleSwitch(
+              minWidth: 80.0,
               activeBgColor: Colors.lightBlueAccent,
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.blue[100],
