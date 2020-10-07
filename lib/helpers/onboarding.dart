@@ -65,7 +65,7 @@ class Onboarding extends StatelessWidget {
         PageViewModel(
           title: "Add to Calendar",
           body:
-          "Quickly add a task to your calendar carrying over the recurring options from the top popup menu",
+          "Quickly add a task to your calendar carrying over the recurring options from the task popup menu",
           image: _buildImage('onboarding/onboarding5.jpg'),
           decoration: pageDecoration,
         ),

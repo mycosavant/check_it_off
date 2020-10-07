@@ -89,8 +89,11 @@ class DB {
                   : (list[i]['interval'].toString().contains('Monthly'))
                       ? recurrenceInterval.Monthly
                       : recurrenceInterval.None,
-          dueDate: list[i]['dueDate']);
+          dueDate: (list[i]['dueDate']) == "" ? DateTime.now().toString() : list[i]['dueDate']);
       tasks.add(task);
+      if(list[i]['dueDate'] == ""){
+        update(task);
+      }
     }
     // print(tasks.length);
     return tasks;
@@ -153,7 +156,8 @@ class DB {
               : (list[i]['interval'].toString().contains('Monthly'))
                   ? recurrenceInterval.Monthly
                   : recurrenceInterval.None;
-      var dueDate = list[i]['dueDate'];
+      var  dueDate = list[i]['dueDate'] == "" ? DateTime.now().toString() : list[i]['dueDate'];
+
       Task task = Task(
           id: id,
           name: name,
@@ -164,6 +168,9 @@ class DB {
           dueDate: dueDate,
           interval: interval);
       t.add(task);
+      if(list[i]['dueDate'] == ""){
+        update(task);
+      }
     }
     // print(t.length);
     return t;
