@@ -1,16 +1,30 @@
+
 import 'package:check_it_off/helpers/db.dart';
 
 enum priorityLevel { High, Normal, Low }
+enum recurrenceInterval { None, Daily, Weekly, Monthly }
 
 class Task {
   var id;
   String name;
   bool isDone;
   priorityLevel priority;
+  bool recurring;
+  int numberOfRecurrences;
+  recurrenceInterval interval;
+  String dueDate;
 
   static String table = 'Tasks';
 
-  Task({this.id, this.name, this.isDone = false, this.priority});
+  Task(
+      {this.id,
+      this.name,
+      this.isDone = false,
+      this.priority,
+      this.recurring=false,
+      this.numberOfRecurrences=0,
+      this.interval,
+      this.dueDate=''});
 
   void toggleDone() {
     isDone = !isDone;
@@ -22,11 +36,11 @@ class Task {
       'name': name,
       'isDone': isDone ? 1 : 0,
       'priority': priority.toString(),
+      'recurring': recurring ? 1 : 0,
+      'numberOfRecurrences': numberOfRecurrences,
+      'interval': interval.toString(),
+      'dueDate': dueDate
     };
-
-    // if (id != null) {
-    //   map['id'] = id;
-    // }
     return map;
   }
 
@@ -39,6 +53,16 @@ class Task {
             ? priorityLevel.High
             : (map['priority'].toString().contains('Low'))
                 ? priorityLevel.Low
-                : priorityLevel.Normal);
+                : priorityLevel.Normal,
+        recurring: ((map['recurring'] == 1) ? true : false),
+        numberOfRecurrences: (int.parse(map['numberOfRecurrences'])),
+        interval: (map['priority'].toString().contains('Daily'))
+            ? recurrenceInterval.Daily
+            : (map['interval'].toString().contains('Weekly'))
+                ? recurrenceInterval.Weekly
+                : (map['interval'].toString().contains('Monthly'))
+                    ? recurrenceInterval.Monthly
+                    :  recurrenceInterval.None,
+        dueDate: map['dueDate']);
   }
 }

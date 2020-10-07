@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'dart:io' as io;
 
 class DB {
+  int version = 2;
   static final DB _instance = new DB.internal();
 
   factory DB() => _instance;
@@ -25,14 +26,40 @@ class DB {
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "main.db");
-    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var theDb = await openDatabase(path,
+        version: version, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return theDb;
   }
 
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
-    await db.execute(
-        'CREATE TABLE Task (id INTEGER UNIQUE PRIMARY KEY NOT NULL, name STRING, isDone INT, priority STRING)');
+    await db.execute('''CREATE TABLE Task 
+            (id INTEGER UNIQUE PRIMARY KEY NOT NULL, 
+            name STRING, 
+            isDone INT, 
+            priority STRING,
+            recurring INT,
+            numberOfRecurrences INT,
+            interval STRING,
+            dueDate STRING
+            )
+            ''');
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    // When creating the db, create the table
+    await db.execute('''
+          alter table Task add column recurring integer default 0;
+        ''');
+    await db.execute('''
+          alter table Task add column numberOfRecurrences integer default 0;
+        ''');
+    await db.execute('''
+          alter table Task add column interval String default '';
+        ''');
+    await db.execute('''
+          alter table Task add column dueDate String default '';
+        ''');
   }
 
   Future<int> insert(Task task) async {
@@ -52,10 +79,23 @@ class DB {
           id: list[i]["id"],
           name: list[i]["name"],
           isDone: list[i]["isDone"],
-          priority: list[i]["priority"]);
+          priority: list[i]["priority"],
+          recurring: ((list[i]['recurring'] == 1) ? true : false),
+          numberOfRecurrences: (int.parse(list[i]['numberOfRecurrences'])),
+          interval: (list[i]['priority'].toString().contains('Daily'))
+              ? recurrenceInterval.Daily
+              : (list[i]['interval'].toString().contains('Weekly'))
+                  ? recurrenceInterval.Weekly
+                  : (list[i]['interval'].toString().contains('Monthly'))
+                      ? recurrenceInterval.Monthly
+                      : recurrenceInterval.None,
+          dueDate: (list[i]['dueDate']) == "" ? DateTime.now().toString() : list[i]['dueDate']);
       tasks.add(task);
+      if(list[i]['dueDate'] == ""){
+        update(task);
+      }
     }
-    print(tasks.length);
+    // print(tasks.length);
     return tasks;
   }
 
@@ -86,12 +126,14 @@ class DB {
       sql = '$sql ORDER BY priority';
     } else if (order == 'dsc') {
       sql = '$sql ORDER BY priority DESC';
-    }
-    else if (order == 'aasc') {
+    } else if (order == 'aasc') {
       sql = '$sql ORDER BY name';
-    }
-    else if (order == 'adsc') {
+    } else if (order == 'adsc') {
       sql = '$sql ORDER BY name DESC';
+    } else if (order == 'dueasc') {
+      sql = '$sql ORDER BY dueDate';
+    } else if (order == 'duedsc') {
+      sql = '$sql ORDER BY dueDate DESC';
     }
     List<Map> list = await dbClient.rawQuery(sql);
     List<Task> t = new List();
@@ -104,10 +146,33 @@ class DB {
           : (list[i]['priority'].toString().contains('Low'))
               ? priorityLevel.Low
               : priorityLevel.Normal);
-      Task task = Task(id: id, name: name, isDone: isDone, priority: priority);
+
+      var recurring = ((list[i]['recurring'] == 1) ? true : false);
+      var numberOfRecurrence = (list[i]['numberOfRecurrences']);
+      var interval = (list[i]['priority'].toString().contains('Daily'))
+          ? recurrenceInterval.Daily
+          : (list[i]['interval'].toString().contains('Weekly'))
+              ? recurrenceInterval.Weekly
+              : (list[i]['interval'].toString().contains('Monthly'))
+                  ? recurrenceInterval.Monthly
+                  : recurrenceInterval.None;
+      var  dueDate = list[i]['dueDate'] == "" ? DateTime.now().toString() : list[i]['dueDate'];
+
+      Task task = Task(
+          id: id,
+          name: name,
+          isDone: isDone,
+          priority: priority,
+          recurring: recurring,
+          numberOfRecurrences: numberOfRecurrence,
+          dueDate: dueDate,
+          interval: interval);
       t.add(task);
+      if(list[i]['dueDate'] == ""){
+        update(task);
+      }
     }
-    print(t.length);
+    // print(t.length);
     return t;
   }
 }

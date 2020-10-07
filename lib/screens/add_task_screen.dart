@@ -1,11 +1,17 @@
 import 'dart:io' show Platform;
 import 'package:check_it_off/helpers/db.dart';
+import 'package:check_it_off/models/theme_notifier.dart';
+import 'package:check_it_off/widgets/task_form.dart';
+import 'package:check_it_off/widgets/toggle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/Provider.dart';
 import 'package:check_it_off/models/task_data.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:intl/intl.dart';
 
 String newTaskTitle;
 
@@ -19,159 +25,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     super.initState();
   }
 
-  bool isDarkMode() {
-    var brightness = SchedulerBinding.instance.window.platformBrightness;
-    bool darkModeOn = brightness == Brightness.dark;
-    return darkModeOn;
-  }
-
-  List<Task> _tasks = [];
-  void refresh() async {
-    var db = new DB();
-    List<Task> _results = await db.query('system');
-    _tasks = _results;
-    Provider.of<TaskData>(context, listen: false).tasks = _tasks;
-    setState(() {});
-  }
-
-  List<String> priorityList = ['High', 'Normal', 'Low'];
-  String _selectedPriority = 'Normal';
-  DropdownButton<String> androidDropdown() {
-    List<DropdownMenuItem<String>> dropdownItems = [];
-    for (String priority in priorityList) {
-      var newItem = DropdownMenuItem(
-        child: Text(
-          priority,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        value: priority,
-      );
-      dropdownItems.add(newItem);
-    }
-
-    return DropdownButton<String>(
-      dropdownColor: Colors.lightBlueAccent,
-      value: _selectedPriority,
-      items: dropdownItems,
-      onChanged: (value) {
-        setState(() {
-          _selectedPriority = value;
-        });
-      },
-    );
-  }
-
-  int getIndex() {
-    return _selectedPriority.toString().contains('.')
-        ? priorityList.indexOf(_selectedPriority.toString().split(".")[1])
-        : priorityList.indexOf(_selectedPriority.toString());
-  }
-
-  CupertinoPicker iOSPicker() {
-    List<Text> pickerItems = [];
-    for (String priority in priorityList) {
-      pickerItems.add(
-        Text(
-          priority,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      );
-    }
-
-    return CupertinoPicker(
-      scrollController: FixedExtentScrollController(initialItem: getIndex()),
-      backgroundColor: Colors.lightBlueAccent,
-      itemExtent: 32.0,
-      onSelectedItemChanged: (selectedIndex) {
-        setState(() {
-          _selectedPriority = priorityList[selectedIndex];
-        });
-      },
-      children: pickerItems,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: isDarkMode() ? Color(0xFF212121) : Color(0xff757575),
-      child: Container(
-        padding: EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          color: isDarkMode() ? Colors.black : Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Text(
-              'Add Task',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30.0,
-                // color: Colors.lightBlueAccent,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-            ),
-            TextFormField(
-              style: TextStyle(fontSize: 20.0, color: Colors.lightBlueAccent),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: EdgeInsets.all(12.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-              ),
-              autofocus: true,
-              textAlign: TextAlign.center,
-              onChanged: (newText) {
-                newTaskTitle = newText;
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-            ),
-            Container(
-              height: 150.0,
-              alignment: Alignment.center,
-              // color: Colors.lightBlueAccent,
-              child: Platform.isIOS ? iOSPicker() : androidDropdown(),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-            ),
-            FlatButton(
-              child: Text(
-                'Add',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              color: Colors.lightBlueAccent,
-              onPressed: () async {
-                Task t;
-                t = Provider.of<TaskData>(context, listen: false)
-                    .addTask(newTaskTitle, _selectedPriority);
-                var db = new DB();
-                dynamic result = await db.insert(t);
-
-                // await DB.insert(t);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+    return TaskForm(
+      priority: 'Normal',
+      recurring: 'No',
+      interval: 'None',
+      addToCalendar: 'No',
+      numberOfRecurrences: 0,
+      mode: 'add',
+      task: null,
     );
   }
 }

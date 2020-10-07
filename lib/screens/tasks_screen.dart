@@ -30,9 +30,11 @@ class _TasksScreenState extends State<TasksScreen> {
   void onboarded() async {
     final prefs = await SharedPreferences.getInstance();
     bool ran = prefs.getBool('onboarded');
+    String version = prefs.getString('onboardedVersion');
     prefs.setBool("onboarded", true);
+    prefs.setString('onboardedVersion', '1.0.1');
     try {
-      if (!ran) {
+      if (!ran||version!='1.0.1') {
         Navigator.of(context).pushReplacement(
             new MaterialPageRoute(builder: (context) => new Onboarding()));
       }
@@ -198,6 +200,20 @@ class _TasksScreenState extends State<TasksScreen> {
               title: Text('Group By Priority'),
               onTap: () async {
                 setOrder('asc');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Due Date'),
+              onTap: () async {
+                setOrder('dueasc');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Reverse Due Date'),
+              onTap: () async {
+                setOrder('duedsc');
                 Navigator.pop(context);
               },
             ),
