@@ -58,8 +58,15 @@ class Onboarding extends StatelessWidget {
         PageViewModel(
           title: "Change The Task Order",
           body:
-              "You can order by the order entered, alphabetic, reverse alphabetic, and by priority grouping.",
+              "You can order by the order entered, alphabetic, reverse alphabetic, due date, reverse due date, and by priority grouping.",
           image: _buildImage('onboarding/onboarding4.jpg'),
+          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Add to Calendar",
+          body:
+          "Quickly add a task to your calendar carrying over the recurring options from the top popup menu",
+          image: _buildImage('onboarding/onboarding5.jpg'),
           decoration: pageDecoration,
         ),
       ],
