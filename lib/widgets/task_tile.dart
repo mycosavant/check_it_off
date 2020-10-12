@@ -34,11 +34,12 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     DateFormat formatter = DateFormat('MM/dd/yyyy');
     var finaldate = formatter.format(DateTime.parse(task.dueDate));
     TaskPopup taskPopup = new TaskPopup(
         delete: deleteCallback, edit: editCallback, add: addCallback);
-    return ListTile(
+    return isPortrait ? ListTile(
       title: Text(
         '${task.name} \n${finaldate}',
         style: TextStyle(
@@ -77,6 +78,92 @@ class TaskTile extends StatelessWidget {
           children: [taskPopup],
         ),
       ),
-    );
+    )
+        :ListTile(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: 300,
+            child: Text(
+              '${task.name}',
+              style: TextStyle(
+                  fontSize: 20,
+                  color: (task.dueDate != null
+                      ? (task.dueDate != ''
+                      ? (DateTime.parse(task.dueDate)
+                      .difference(DateTime.now()) <=
+                      Duration(days: 0)
+                      ? Colors.red
+                      : Colors.lightBlueAccent)
+                      : Colors.lightBlueAccent)
+                      : Colors.lightBlueAccent),
+                  fontWeight: FontWeight.w400,
+                  decoration: isChecked ? TextDecoration.lineThrough : null),
+            ),
+          ),
+          SizedBox(
+            width: 110,
+            child: Text(
+              finaldate,
+              style: TextStyle(
+                  fontSize: 20,
+                  color: (task.dueDate != null
+                      ? (task.dueDate != ''
+                      ? (DateTime.parse(task.dueDate)
+                      .difference(DateTime.now()) <=
+                      Duration(days: 0)
+                      ? Colors.red
+                      : Colors.lightBlueAccent)
+                      : Colors.lightBlueAccent)
+                      : Colors.lightBlueAccent),
+                  fontWeight: FontWeight.w400,
+                  decoration: isChecked ? TextDecoration.lineThrough : null),
+            ),
+          ),
+          SizedBox(
+            width: 80,
+            child: Text(
+              '${task.interval.toString().replaceAll('recurrenceInterval.', '')}',
+              style: TextStyle(
+                  fontSize: 20,
+                  color: (task.dueDate != null
+                      ? (task.dueDate != ''
+                      ? (DateTime.parse(task.dueDate)
+                      .difference(DateTime.now()) <=
+                      Duration(days: 0)
+                      ? Colors.red
+                      : Colors.lightBlueAccent)
+                      : Colors.lightBlueAccent)
+                      : Colors.lightBlueAccent),
+                  fontWeight: FontWeight.w400,
+                  decoration: isChecked ? TextDecoration.lineThrough : null),
+            ),
+          ),
+        ],
+      ),
+      leading: Container(
+        child: Wrap(
+          spacing: 12,
+          children: [
+            Checkbox(
+              activeColor: Colors.lightBlueAccent,
+              value: isChecked,
+              onChanged: checkboxCallback,
+            ),
+            IconButton(
+              icon: getPriorityIcon(),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      trailing: Container(
+        child: Wrap(
+          spacing: 12,
+          children: [taskPopup],
+        ),
+      ),
+    ) ;
   }
 }
