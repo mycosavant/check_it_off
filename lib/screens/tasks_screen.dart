@@ -16,6 +16,41 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
+  String myOrder = 'loading';
+
+  static const kSelectedOrderStyle = TextStyle(
+    fontSize: 20.0,
+    color:Colors.lightBlueAccent,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const kOrderStyle = TextStyle(
+    fontSize: 17.0,
+    color:Colors.black,
+  );
+
+  String setOrderString(order) {
+    String result = '';
+    if (order == 'asc') {
+      result = 'Priority';
+    } else if (order == 'dsc') {
+      result = 'Priority (Reverse)';
+    } else if (order == 'aasc') {
+      result = 'Alphabetical';
+    } else if (order == 'adsc') {
+      result = 'Alphabetical (Reverse)';
+    } else if (order == 'dueasc') {
+      result = 'Due Date';
+    } else if (order == 'duedsc') {
+      result = 'Due Date (Reverse)';
+    } else if (order == 'today') {
+      result = 'Due Today';
+    } else {
+      result = 'Unsorted';
+    }
+    return result;
+  }
+
   void setOrder(String order) async {
     List<Task> _tasks = [];
     var db = new DB();
@@ -25,6 +60,7 @@ class _TasksScreenState extends State<TasksScreen> {
     setState(() {});
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('order', order);
+    myOrder = setOrderString(order);
   }
 
   void onboarded() async {
@@ -34,7 +70,7 @@ class _TasksScreenState extends State<TasksScreen> {
     prefs.setBool("onboarded", true);
     prefs.setString('onboardedVersion', '1.0.1');
     try {
-      if (!ran||version!='1.0.1') {
+      if (!ran || version != '1.0.1') {
         Navigator.of(context).pushReplacement(
             new MaterialPageRoute(builder: (context) => new Onboarding()));
       }
@@ -62,26 +98,14 @@ class _TasksScreenState extends State<TasksScreen> {
   initState() {
     onboarded();
     getOrder();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.lightBlueAccent,
-      floatingActionButton: FloatingActionButton(
-          // backgroundColor: Colors.lightBlueAccent,
-          child: Icon(Icons.add),
-          onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => SingleChildScrollView(
-                        child: Container(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: AddTaskScreen(),
-                    )));
-          }),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -96,7 +120,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   width: double.infinity,
                 ),
                 Text(
-                  '${Provider.of<TaskData>(context, listen: true).taskCount} Tasks',
+                  '${Provider.of<TaskData>(context, listen: true).taskCount} Tasks - $myOrder',
                   style: TextStyle(
                     // color: Colors.white,
                     fontSize: 20,
@@ -166,52 +190,83 @@ class _TasksScreenState extends State<TasksScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              child: Text(
-                'Task Order',
-                style: TextStyle(fontSize: 40.0),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.lightBlueAccent,
+            Container(
+              height: 113.0,
+              child: DrawerHeader(
+                child: Text(
+                  'Task Order',
+                  style: TextStyle(fontSize: 33.0),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.lightBlueAccent,
+                ),
               ),
             ),
             ListTile(
-              title: Text('Order Entered'),
+              title: Text(
+                'Unsorted',
+                style: myOrder == 'Unsorted'? kSelectedOrderStyle : kOrderStyle
+              ),
               onTap: () async {
                 setOrder('normal');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: Text('Alphabetic'),
+              title: Text(
+                'Due Today',
+                style: myOrder == 'Due Today'? kSelectedOrderStyle : kOrderStyle
+              ),
+              onTap: () async {
+                setOrder('today');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Alphabetical',
+                style: myOrder == 'Alphabetical'? kSelectedOrderStyle : kOrderStyle
+              ),
               onTap: () async {
                 setOrder('aasc');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: Text('Reverse Alphabetic'),
+              title: Text(
+                'Alphabetical (Reverse)',
+                style:  myOrder == 'Alphabetical (Reverse)'? kSelectedOrderStyle : kOrderStyle
+              ),
               onTap: () async {
                 setOrder('adsc');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: Text('Group By Priority'),
+              title: Text(
+                'Priority',
+                style:  myOrder == 'Priority'? kSelectedOrderStyle : kOrderStyle
+              ),
               onTap: () async {
                 setOrder('asc');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: Text('Due Date'),
+              title: Text(
+                'Due Date',
+                style: myOrder == 'Due Date'? kSelectedOrderStyle : kOrderStyle
+              ),
               onTap: () async {
                 setOrder('dueasc');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: Text('Reverse Due Date'),
+              title: Text(
+                'Due Date (Reverse)',
+                style: myOrder == 'Due Date (Reverse)'? kSelectedOrderStyle : kOrderStyle
+              ),
               onTap: () async {
                 setOrder('duedsc');
                 Navigator.pop(context);
@@ -223,6 +278,7 @@ class _TasksScreenState extends State<TasksScreen> {
       bottomNavigationBar: BottomAppBar(
           color: Colors.lightBlueAccent,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 15.0),
@@ -232,6 +288,25 @@ class _TasksScreenState extends State<TasksScreen> {
                   iconSize: 35.0,
                   onPressed: () {
                     launch('https://www.grimshawcoding.com/');
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: IconButton(
+                  icon: Icon(Icons.post_add_outlined),
+                  color: Colors.white,
+                  iconSize: 35.0,
+                  onPressed:() {
+                    showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => SingleChildScrollView(
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context).viewInsets.bottom),
+                              child: AddTaskScreen(),
+                            )));
                   },
                 ),
               )

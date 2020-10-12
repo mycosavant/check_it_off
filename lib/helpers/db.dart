@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:io' as io;
+import 'package:intl/intl.dart';
 
 class DB {
   int version = 2;
@@ -89,9 +90,11 @@ class DB {
                   : (list[i]['interval'].toString().contains('Monthly'))
                       ? recurrenceInterval.Monthly
                       : recurrenceInterval.None,
-          dueDate: (list[i]['dueDate']) == "" ? DateTime.now().toString() : list[i]['dueDate']);
+          dueDate: (list[i]['dueDate']) == ""
+              ? DateTime.now().toString()
+              : list[i]['dueDate']);
       tasks.add(task);
-      if(list[i]['dueDate'] == ""){
+      if (list[i]['dueDate'] == "") {
         update(task);
       }
     }
@@ -134,6 +137,8 @@ class DB {
       sql = '$sql ORDER BY dueDate';
     } else if (order == 'duedsc') {
       sql = '$sql ORDER BY dueDate DESC';
+    } else if (order == 'today') {
+      sql = '$sql ORDER BY dueDate';
     }
     List<Map> list = await dbClient.rawQuery(sql);
     List<Task> t = new List();
@@ -156,7 +161,9 @@ class DB {
               : (list[i]['interval'].toString().contains('Monthly'))
                   ? recurrenceInterval.Monthly
                   : recurrenceInterval.None;
-      var  dueDate = list[i]['dueDate'] == "" ? DateTime.now().toString() : list[i]['dueDate'];
+      var dueDate = list[i]['dueDate'] == ""
+          ? DateTime.now().toString()
+          : list[i]['dueDate'];
 
       Task task = Task(
           id: id,
@@ -167,8 +174,22 @@ class DB {
           numberOfRecurrences: numberOfRecurrence,
           dueDate: dueDate,
           interval: interval);
-      t.add(task);
-      if(list[i]['dueDate'] == ""){
+      if (order != 'today') {
+        t.add(task);
+      } else {
+        var taskDate = DateTime.parse(task.dueDate);
+        var today = DateTime.now();
+        var tomorrow = DateTime.now().add(Duration(days: 1));
+        // print(today);
+        if (today.difference(taskDate).inDays >= 0 &&
+            task.dueDate.split(' ')[0] != tomorrow.toString().split(' ')[0]) {
+          // print(
+          //     '${task.name} ${task.dueDate} ${today.difference(taskDate).inDays}');
+          t.add(task);
+        }
+      }
+
+      if (list[i]['dueDate'] == "") {
         update(task);
       }
     }

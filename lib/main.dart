@@ -1,8 +1,7 @@
+import 'package:check_it_off/screens/Splash.dart';
 import 'package:flutter/material.dart';
-import 'package:check_it_off/screens/tasks_screen.dart';
 import 'package:check_it_off/models/task_data.dart';
 import 'package:provider/provider.dart';
-import 'package:splashscreen/splashscreen.dart';
 import 'models/theme_notifier.dart';
 import 'models/themes.dart';
 
@@ -22,26 +21,7 @@ class MyApp extends StatelessWidget {
       create: (context) => TaskData(),
       child: MaterialApp(
         theme: themeNotifier.getTheme(),
-        home: SplashScreen(
-          seconds: 3,
-          navigateAfterSeconds: TasksScreen(),
-          title: Text(''),
-          // title: new Text('Welcome In SplashScreen',
-          //   style: new TextStyle(
-          //       fontWeight: FontWeight.bold,
-          //       fontSize: 20.0
-          //   ),
-          // ),
-          image: new Image.asset(
-            'assets/splash.png',
-          ),
-          // backgroundGradient: new LinearGradient(colors: [Colors.cyan, Colors.blue], begin: Alignment.topLeft, end: Alignment.bottomRight),
-          backgroundColor: Colors.lightBlueAccent,
-          styleTextUnderTheLoader: new TextStyle(),
-          photoSize: 150,
-          onClick: (){},
-          loaderColor: Colors.white,
-        ),
+        home: Splash(),
         // TasksScreen(),
       ),
     );

@@ -9,7 +9,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/Provider.dart';
 import 'package:check_it_off/models/task_data.dart';
-import 'package:toggle_switch/toggle_switch.dart';
+// import 'package:toggle_switch/toggle_switch.dart';
 import 'package:intl/intl.dart';
 
 String taskTitle;
@@ -338,6 +338,23 @@ class _TaskFormState extends State<TaskForm> {
                       Navigator.pop(context);
                     },
             ),
+            FlatButton(
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(15.0)),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              color: Colors.lightBlueAccent,
+              onPressed: () {
+                Navigator.pop(context);
+                if (widget.mode.toString().contains('add') == false) {
+                  Navigator.pop(context);
+                }
+              },
+            )
           ],
         ),
       ),
