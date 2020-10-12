@@ -1,6 +1,4 @@
 PODS:
-  - add_2_calendar (0.0.1):
-    - Flutter
   - add_to_calendar (0.0.1):
     - Flutter
   - device_calendar (0.0.1):
@@ -20,7 +18,6 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - add_2_calendar (from `.symlinks/plugins/add_2_calendar/ios`)
   - add_to_calendar (from `.symlinks/plugins/add_to_calendar/ios`)
   - device_calendar (from `.symlinks/plugins/device_calendar/ios`)
   - Flutter (from `Flutter`)
@@ -34,8 +31,6 @@ SPEC REPOS:
     - FMDB
 
 EXTERNAL SOURCES:
-  add_2_calendar:
-    :path: ".symlinks/plugins/add_2_calendar/ios"
   add_to_calendar:
     :path: ".symlinks/plugins/add_to_calendar/ios"
   device_calendar:
@@ -52,7 +47,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
-  add_2_calendar: c201b1c7dc0299280f1b1a8158aa80e15a8f8912
   add_to_calendar: 8d1fe5bc868c1393584ab74165be36ee30c9bc4b
   device_calendar: 23b28a5f1ab3bf77e34542fb1167e1b8b29a98f5
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec

@@ -1,8 +1,5 @@
-import 'package:add_to_calendar/add_to_calendar.dart';
-import 'package:check_it_off/helpers/calendar.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
