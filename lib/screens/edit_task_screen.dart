@@ -35,6 +35,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       recurring: task.recurring ? 'Yes' : 'No',
       mode: 'edit',
       index: index,
+      id: task.id,
     );
   }
 }

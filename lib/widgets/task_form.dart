@@ -24,6 +24,7 @@ class TaskForm extends StatefulWidget {
   final mode;
   final task;
   final index;
+  final id;
 
   TaskForm({
     this.priority,
@@ -35,6 +36,7 @@ class TaskForm extends StatefulWidget {
     this.mode,
     this.task,
     this.index,
+    this.id,
   });
   @override
   _TaskFormState createState() => _TaskFormState();
@@ -331,8 +333,9 @@ class _TaskFormState extends State<TaskForm> {
                             _selectedAddToCalendar == 'Yes' ? true : false,
                       );
                       var db = new DB();
-                      widget.task.id = widget.index;
-                      dynamic result = await db.update(widget.task);
+                      Task t = widget.task;
+                      t.id = widget.id;
+                      dynamic result = await db.update(t);
 
                       Navigator.pop(context);
                       Navigator.pop(context);

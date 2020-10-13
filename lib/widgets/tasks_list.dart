@@ -9,15 +9,19 @@ import 'package:check_it_off/screens/edit_task_screen.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class TasksList extends StatefulWidget {
+  final tasks;
+  TasksList({this.tasks});
   @override
   _TasksListState createState() => _TasksListState();
 }
 
 class _TasksListState extends State<TasksList> {
+  List<Task> _tasks;
   void initState() {
     super.initState();
     // loadDB();
-    refresh();
+    // refresh(widget.order);
+    _tasks = widget.tasks;
   }
 
   // void loadDB() async {
@@ -25,15 +29,15 @@ class _TasksListState extends State<TasksList> {
   //   WidgetsFlutterBinding.ensureInitialized();
   // }
 
-  List<Task> _tasks = [];
-  void refresh([order = 'normal']) async {
-    var db = new DB();
-    List<Task> _results = await db.query('system');
-    _tasks = _results;
-    Provider.of<TaskData>(context, listen: false).tasks = _tasks;
-    Provider.of<TaskData>(context, listen: false).notify();
-    setState(() {});
-  }
+
+  // void refresh([order = 'normal']) async {
+  //   var db = new DB();
+  //   List<Task> _results = await db.query('system');
+  //   _tasks = _results;
+  //   Provider.of<TaskData>(context, listen: false).tasks = _tasks;
+  //   Provider.of<TaskData>(context, listen: false).notify();
+  //   setState(() {});
+  // }
 
   String addMonth(String date) {
     return new DateTime(DateTime.parse(date).year,
