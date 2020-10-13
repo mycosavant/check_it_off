@@ -112,10 +112,16 @@ class DB {
 
   Future<bool> update(Task task) async {
     var dbClient = await db;
-
-    int res = await dbClient.update("Task", task.toMap(),
-        where: "id = ?", whereArgs: <int>[task.id]);
-    return res > 0 ? true : false;
+var r = await dbClient.rawQuery('SELECT * from Task');
+    var res = await dbClient.update("Task", task.toMap(),
+        where: "id = ?", whereArgs: [task.id]);
+    // var sql =
+    //     'UPDATE Task SET name=\'${task.name}\', isDone=${task.isDone ? 1 : 0}, priority=\'${task.priority.toString()}\',recurring=${task.recurring ? 1 : 0}, interval=\'${task.interval.toString()}\', dueDate=\'${task.dueDate}\' WHERE id = ${task.id}';
+    // var res = await dbClient.rawQuery(sql);
+    return res  > 0 ? true : false;
+    // delete(task);
+    // io.sleep(Duration(seconds: 5));
+    // insert(task);
   }
 
   Future<List<Task>> query([order = 'normal']) async {
@@ -182,7 +188,8 @@ class DB {
         var tomorrow = DateTime.now().add(Duration(days: 1));
         // print(today);
         if (today.difference(taskDate).inDays >= 0 &&
-            task.dueDate.split(' ')[0] != tomorrow.toString().split(' ')[0]) {
+            task.dueDate.split(' ')[0] != tomorrow.toString().split(' ')[0] &&
+            !task.isDone) {
           // print(
           //     '${task.name} ${task.dueDate} ${today.difference(taskDate).inDays}');
           t.add(task);

@@ -1,5 +1,4 @@
 import 'package:check_it_off/screens/tasks_screen.dart';
-import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter/material.dart';
 

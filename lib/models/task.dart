@@ -1,6 +1,3 @@
-
-import 'package:check_it_off/helpers/db.dart';
-
 enum priorityLevel { High, Normal, Low }
 enum recurrenceInterval { None, Daily, Weekly, Monthly }
 
