@@ -1,4 +1,5 @@
 import 'package:check_it_off/screens/Splash.dart';
+import 'package:check_it_off/screens/tasks_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:check_it_off/models/task_data.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,13 @@ class MyApp extends StatelessWidget {
       create: (context) => TaskData(),
       child: MaterialApp(
         theme: themeNotifier.getTheme(),
-        home: Splash(),
+        initialRoute: '/',
+        routes: {
+          // When navigating to the "/" route, build the FirstScreen widget.
+          '/': (context) => Splash(),
+          // When navigating to the "/second" route, build the SecondScreen widget.
+          '/tasks': (context) => TasksScreen(),
+        },
         // TasksScreen(),
       ),
     );

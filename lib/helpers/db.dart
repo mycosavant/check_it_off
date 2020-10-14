@@ -124,13 +124,16 @@ var r = await dbClient.rawQuery('SELECT * from Task');
     // insert(task);
   }
 
-  Future<List<Task>> query([order = 'normal']) async {
+  Future<List<Task>> query(bool archived, [order = 'normal']) async {
     if (order == 'current') {
       order = sort;
     }
     sort = order;
     var dbClient = await db;
     String sql = 'SELECT * FROM Task';
+    if (!archived){
+      sql='$sql WHERE isDone=0 ';
+    }
     if (order == 'asc') {
       sql = '$sql ORDER BY priority';
     } else if (order == 'dsc') {

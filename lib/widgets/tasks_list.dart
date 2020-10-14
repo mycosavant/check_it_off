@@ -9,8 +9,9 @@ import 'package:check_it_off/screens/edit_task_screen.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class TasksList extends StatefulWidget {
+  final notifyRefresh;
   final tasks;
-  TasksList({this.tasks});
+  TasksList({this.notifyRefresh, this.tasks});
   @override
   _TasksListState createState() => _TasksListState();
 }
@@ -108,6 +109,7 @@ class _TasksListState extends State<TasksList> {
                   var db = new DB();
                   dynamic result = await db.insert(t);
                 }
+                widget.notifyRefresh(true);
               },
               editCallback: () {
                 showModalBottomSheet(
@@ -125,7 +127,7 @@ class _TasksListState extends State<TasksList> {
                   context: context,
                   type: AlertType.warning,
                   title: "Confirm Delete",
-                  desc: "Are you sure you want to delete ${task.name}?",
+                  desc: "Are you sure you want to delete ${task.name}?  This cannot be undone.",
                   buttons: [
                     DialogButton(
                       child: Text(
