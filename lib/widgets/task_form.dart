@@ -50,6 +50,10 @@ class _TaskFormState extends State<TaskForm> {
   int _selectedNumberOfRecurrences;
   var initialDate;
 
+  refresh() {
+    setState(() {});
+  }
+
   void initState() {
     super.initState();
     taskTitle = widget.task != null ? widget.task.name : '';
@@ -89,14 +93,6 @@ class _TaskFormState extends State<TaskForm> {
   }
 
   List<Task> _tasks = [];
-  void refresh() async {
-    var db = new DB();
-    List<Task> _results = await db.query('system');
-    _tasks = _results;
-    Provider.of<TaskData>(context, listen: false).tasks = _tasks;
-    setState(() {});
-  }
-
   List<String> priorityList = ['High', 'Normal', 'Low'];
   List<String> yesNoList = ['Yes', 'No'];
   List<String> recurringIntervalList = ['Daily', 'Weekly', 'Monthly', 'None'];
