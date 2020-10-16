@@ -93,6 +93,13 @@ class _TasksScreenState extends State<TasksScreen> {
     setState(() {
       var _parentVariable = childValue;
     });
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => TasksScreen(),
+        transitionDuration: Duration(seconds: 0),
+      ),
+    );
   }
 
   void getShowAllFlag() async {
