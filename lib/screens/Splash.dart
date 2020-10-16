@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 class Splash extends StatelessWidget {
+  final qaOrder;
+  Splash([this.qaOrder]);
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: SplashScreen(
         seconds: 3,
-        navigateAfterSeconds: TasksScreen(),
+        navigateAfterSeconds: TasksScreen(qaOrder),
         title: Text(''),
         // title: new Text('Welcome In SplashScreen',
         //   style: new TextStyle(

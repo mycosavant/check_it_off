@@ -12,22 +12,28 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TasksScreen extends StatefulWidget {
+  final qaOrder;
+  TasksScreen([this.qaOrder]);
+
   @override
-  _TasksScreenState createState() => _TasksScreenState();
+  _TasksScreenState createState() => _TasksScreenState(qaOrder);
 }
 
 class _TasksScreenState extends State<TasksScreen> {
+  final qaOrder;
+  _TasksScreenState([this.qaOrder]);
+
   String myOrder = 'loading';
   bool archived;
 
   static const kSelectedOrderStyle = TextStyle(
-    fontSize: 20.0,
+    fontSize: 18.0,
     color: Colors.lightBlueAccent,
     fontWeight: FontWeight.bold,
   );
 
   static const kOrderStyle = TextStyle(
-    fontSize: 17.0,
+    fontSize: 15.0,
     color: Colors.black,
   );
 
@@ -87,13 +93,6 @@ class _TasksScreenState extends State<TasksScreen> {
     setState(() {
       var _parentVariable = childValue;
     });
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => TasksScreen(),
-        transitionDuration: Duration(seconds: 0),
-      ),
-    );
   }
 
   void getShowAllFlag() async {
@@ -123,6 +122,10 @@ class _TasksScreenState extends State<TasksScreen> {
   void getOrder() async {
     final prefs = await SharedPreferences.getInstance();
     String order = prefs.getString('order');
+    if (qaOrder != null) {
+      order = qaOrder;
+      setOrder(order);
+    }
     try {
       if (order != null) {
         setOrder(order);
@@ -237,8 +240,8 @@ class _TasksScreenState extends State<TasksScreen> {
               height: 113.0,
               child: DrawerHeader(
                 child: Text(
-                  'Task Order',
-                  style: TextStyle(fontSize: 33.0),
+                  'Settings',
+                  style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
                 ),
                 decoration: BoxDecoration(
                   color: Colors.lightBlueAccent,
@@ -246,74 +249,91 @@ class _TasksScreenState extends State<TasksScreen> {
               ),
             ),
             ListTile(
-              title: Text('Unsorted',
-                  style: myOrder == 'Unsorted'
-                      ? kSelectedOrderStyle
-                      : kOrderStyle),
-              onTap: () async {
-                setOrder('normal');
-                Navigator.pop(context);
-              },
+              title: Text(
+                'Sort Order',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () {},
             ),
-            ListTile(
-              title: Text('Due Today',
-                  style: myOrder == 'Due Today'
-                      ? kSelectedOrderStyle
-                      : kOrderStyle),
-              onTap: () async {
-                setOrder('today');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Alphabetical',
-                  style: myOrder == 'Alphabetical'
-                      ? kSelectedOrderStyle
-                      : kOrderStyle),
-              onTap: () async {
-                setOrder('aasc');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Alphabetical (Reverse)',
-                  style: myOrder == 'Alphabetical (Reverse)'
-                      ? kSelectedOrderStyle
-                      : kOrderStyle),
-              onTap: () async {
-                setOrder('adsc');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Priority',
-                  style: myOrder == 'Priority'
-                      ? kSelectedOrderStyle
-                      : kOrderStyle),
-              onTap: () async {
-                setOrder('asc');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Due Date',
-                  style: myOrder == 'Due Date'
-                      ? kSelectedOrderStyle
-                      : kOrderStyle),
-              onTap: () async {
-                setOrder('dueasc');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Due Date (Reverse)',
-                  style: myOrder == 'Due Date (Reverse)'
-                      ? kSelectedOrderStyle
-                      : kOrderStyle),
-              onTap: () async {
-                setOrder('duedsc');
-                Navigator.pop(context);
-              },
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text('Unsorted',
+                        style: myOrder == 'Unsorted'
+                            ? kSelectedOrderStyle
+                            : kOrderStyle),
+                    onTap: () async {
+                      setOrder('normal');
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Due Today',
+                        style: myOrder == 'Due Today'
+                            ? kSelectedOrderStyle
+                            : kOrderStyle),
+                    onTap: () async {
+                      setOrder('today');
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Alphabetical',
+                        style: myOrder == 'Alphabetical'
+                            ? kSelectedOrderStyle
+                            : kOrderStyle),
+                    onTap: () async {
+                      setOrder('aasc');
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Alphabetical (Reverse)',
+                        style: myOrder == 'Alphabetical (Reverse)'
+                            ? kSelectedOrderStyle
+                            : kOrderStyle),
+                    onTap: () async {
+                      setOrder('adsc');
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Priority',
+                        style: myOrder == 'Priority'
+                            ? kSelectedOrderStyle
+                            : kOrderStyle),
+                    onTap: () async {
+                      setOrder('asc');
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Due Date',
+                        style: myOrder == 'Due Date'
+                            ? kSelectedOrderStyle
+                            : kOrderStyle),
+                    onTap: () async {
+                      setOrder('dueasc');
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Due Date (Reverse)',
+                        style: myOrder == 'Due Date (Reverse)'
+                            ? kSelectedOrderStyle
+                            : kOrderStyle),
+                    onTap: () async {
+                      setOrder('duedsc');
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
