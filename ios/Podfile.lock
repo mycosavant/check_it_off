@@ -1,9 +1,15 @@
 PODS:
   - add_to_calendar (0.0.1):
     - Flutter
+  - background_fetch (0.6.0):
+    - Flutter
   - device_calendar (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
+  - flutter_native_timezone (0.0.1):
+    - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -21,8 +27,11 @@ PODS:
 
 DEPENDENCIES:
   - add_to_calendar (from `.symlinks/plugins/add_to_calendar/ios`)
+  - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - device_calendar (from `.symlinks/plugins/device_calendar/ios`)
   - Flutter (from `Flutter`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_native_timezone (from `.symlinks/plugins/flutter_native_timezone/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - quick_actions (from `.symlinks/plugins/quick_actions/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -36,10 +45,16 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   add_to_calendar:
     :path: ".symlinks/plugins/add_to_calendar/ios"
+  background_fetch:
+    :path: ".symlinks/plugins/background_fetch/ios"
   device_calendar:
     :path: ".symlinks/plugins/device_calendar/ios"
   Flutter:
     :path: Flutter
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_native_timezone:
+    :path: ".symlinks/plugins/flutter_native_timezone/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   quick_actions:
@@ -53,8 +68,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   add_to_calendar: 8d1fe5bc868c1393584ab74165be36ee30c9bc4b
+  background_fetch: 9221ccc02b41aff8a52b2090d9f791c5ed82eaee
   device_calendar: 23b28a5f1ab3bf77e34542fb1167e1b8b29a98f5
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
+  flutter_native_timezone: e72ff1900460ff57cfd331d1758050c9269f3e99
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   quick_actions: 6cb2390c4dab0e737c94573c27e18d9666710720

@@ -1,4 +1,5 @@
 import 'package:check_it_off/helpers/db.dart';
+import 'package:check_it_off/helpers/notification_helper.dart';
 import 'package:check_it_off/helpers/onboarding.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:check_it_off/models/theme_notifier.dart';
@@ -10,6 +11,8 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../main.dart';
 
 class TasksScreen extends StatefulWidget {
   final qaOrder;
@@ -25,6 +28,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   String myOrder = 'loading';
   bool archived;
+  bool notify;
 
   static const kSelectedOrderStyle = TextStyle(
     fontSize: 18.0,
@@ -89,6 +93,15 @@ class _TasksScreenState extends State<TasksScreen> {
     }
   }
 
+  void notificationCheck() async {
+    final prefs = await SharedPreferences.getInstance();
+    notify = prefs.getBool('notify');
+    if (notify == null) {
+      prefs.setBool("notify", false);
+      notify = false;
+    }
+  }
+
   refresh(dynamic childValue) {
     setState(() {
       var _parentVariable = childValue;
@@ -148,7 +161,10 @@ class _TasksScreenState extends State<TasksScreen> {
     onboarded();
     getShowAllFlag();
     getOrder();
+
     archived = false;
+    notify = false;
+    notificationCheck();
     super.initState();
   }
 
@@ -256,6 +272,7 @@ class _TasksScreenState extends State<TasksScreen> {
               ),
             ),
             ListTile(
+              dense: true,
               title: Text(
                 'Sort Order',
                 style: TextStyle(
@@ -270,6 +287,7 @@ class _TasksScreenState extends State<TasksScreen> {
               child: Column(
                 children: [
                   ListTile(
+                    dense: true,
                     title: Text('Unsorted',
                         style: myOrder == 'Unsorted'
                             ? kSelectedOrderStyle
@@ -280,6 +298,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     },
                   ),
                   ListTile(
+                    dense: true,
                     title: Text('Due Today',
                         style: myOrder == 'Due Today'
                             ? kSelectedOrderStyle
@@ -290,6 +309,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     },
                   ),
                   ListTile(
+                    dense: true,
                     title: Text('Alphabetical',
                         style: myOrder == 'Alphabetical'
                             ? kSelectedOrderStyle
@@ -300,6 +320,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     },
                   ),
                   ListTile(
+                    dense: true,
                     title: Text('Alphabetical (Reverse)',
                         style: myOrder == 'Alphabetical (Reverse)'
                             ? kSelectedOrderStyle
@@ -310,6 +331,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     },
                   ),
                   ListTile(
+                    dense: true,
                     title: Text('Priority',
                         style: myOrder == 'Priority'
                             ? kSelectedOrderStyle
@@ -320,6 +342,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     },
                   ),
                   ListTile(
+                    dense: true,
                     title: Text('Due Date',
                         style: myOrder == 'Due Date'
                             ? kSelectedOrderStyle
@@ -330,6 +353,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     },
                   ),
                   ListTile(
+                    dense: true,
                     title: Text('Due Date (Reverse)',
                         style: myOrder == 'Due Date (Reverse)'
                             ? kSelectedOrderStyle
@@ -342,6 +366,49 @@ class _TasksScreenState extends State<TasksScreen> {
                 ],
               ),
             ),
+            Padding(
+              padding:  const EdgeInsets.all(5.0),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Container(alignment: Alignment.centerLeft,
+                width: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Notifications',
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding:  const EdgeInsets.all(8.0),
+                    ),
+                    FlatButton(
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(15.0)),
+                        color: Colors.lightBlueAccent,
+                        onPressed: () async {
+                          setState(() {
+                            notify
+                                ? turnOffNotification(
+                                    flutterLocalNotificationsPlugin)
+                                : turnOnNotfications(true);
+                            notify = !notify;
+                          });
+                          final prefs = await SharedPreferences.getInstance();
+                          prefs.setBool('notify', notify);
+                        },
+                        child: Text(notify ? 'Turn Off' : 'Turn On')),
+                  ],
+                ),
+              ),
+            ),
+
+            // NotificationSwitchBuilder(),
           ],
         ),
       ),
@@ -368,7 +435,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       top: 5.0,
                     ),
                     child: Text(
-                      'Show All',
+                      archived ? 'Show Active' : 'Show All',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,

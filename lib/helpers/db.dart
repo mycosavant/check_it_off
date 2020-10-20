@@ -4,7 +4,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:io' as io;
+import 'package:check_it_off/helpers/notification_helper.dart';
 import 'package:intl/intl.dart';
+
+import '../main.dart';
 
 class DB {
   int version = 2;
@@ -67,6 +70,8 @@ class DB {
     var dbClient = await db;
 
     int res = await dbClient.insert("Task", task.toMap());
+    turnOffNotification(flutterLocalNotificationsPlugin);
+    turnOnNotfications(true);
     return res;
   }
 
@@ -107,18 +112,23 @@ class DB {
 
     int res =
         await dbClient.rawDelete('DELETE FROM Task WHERE id = ?', [task.id]);
+    turnOffNotification(flutterLocalNotificationsPlugin);
+    turnOnNotfications(true);
     return res;
   }
 
   Future<bool> update(Task task) async {
     var dbClient = await db;
-var r = await dbClient.rawQuery('SELECT * from Task');
-    var res = await dbClient.update("Task", task.toMap(),
-        where: "id = ?", whereArgs: [task.id]);
+    var r = await dbClient.rawQuery('SELECT * from Task');
+    var res = await dbClient
+        .update("Task", task.toMap(), where: "id = ?", whereArgs: [task.id]);
+
+    turnOffNotification(flutterLocalNotificationsPlugin);
+    turnOnNotfications(true);
     // var sql =
     //     'UPDATE Task SET name=\'${task.name}\', isDone=${task.isDone ? 1 : 0}, priority=\'${task.priority.toString()}\',recurring=${task.recurring ? 1 : 0}, interval=\'${task.interval.toString()}\', dueDate=\'${task.dueDate}\' WHERE id = ${task.id}';
     // var res = await dbClient.rawQuery(sql);
-    return res  > 0 ? true : false;
+    return res > 0 ? true : false;
     // delete(task);
     // io.sleep(Duration(seconds: 5));
     // insert(task);
@@ -131,8 +141,8 @@ var r = await dbClient.rawQuery('SELECT * from Task');
     sort = order;
     var dbClient = await db;
     String sql = 'SELECT * FROM Task';
-    if (!archived){
-      sql='$sql WHERE isDone=0 ';
+    if (!archived) {
+      sql = '$sql WHERE isDone=0 ';
     }
     if (order == 'asc') {
       sql = '$sql ORDER BY priority';
@@ -202,6 +212,62 @@ var r = await dbClient.rawQuery('SELECT * from Task');
       if (list[i]['dueDate'] == "") {
         update(task);
       }
+    }
+    // print(t.length);
+    return t;
+  }
+
+  Future<int> dueTodayCount() async {
+    var dbClient = await db;
+    String sql = 'SELECT * FROM Task';
+
+    sql = '$sql ORDER BY dueDate';
+
+    List<Map> list = await dbClient.rawQuery(sql);
+    // print(t.length);
+    return list.length;
+  }
+
+  Future<List<Task>> notificationList() async {
+    var dbClient = await db;
+    String sql = 'SELECT * FROM Task';
+    sql = '$sql WHERE isDone=0 ';
+    List<Map> list = await dbClient.rawQuery(sql);
+    List<Task> t = new List();
+    for (int i = 0; i < list.length; i++) {
+      var id = list[i]["id"];
+      var name = list[i]["name"].toString();
+      var isDone = list[i]["isDone"] == 1 ? true : false;
+      var priority = ((list[i]['priority'].toString().contains('High'))
+          ? priorityLevel.High
+          : (list[i]['priority'].toString().contains('Low'))
+              ? priorityLevel.Low
+              : priorityLevel.Normal);
+
+      var recurring = ((list[i]['recurring'] == 1) ? true : false);
+      var numberOfRecurrence = (list[i]['numberOfRecurrences']);
+      var interval = (list[i]['priority'].toString().contains('Daily'))
+          ? recurrenceInterval.Daily
+          : (list[i]['interval'].toString().contains('Weekly'))
+              ? recurrenceInterval.Weekly
+              : (list[i]['interval'].toString().contains('Monthly'))
+                  ? recurrenceInterval.Monthly
+                  : recurrenceInterval.None;
+      var dueDate = list[i]['dueDate'] == ""
+          ? DateTime.now().toString()
+          : list[i]['dueDate'];
+
+      Task task = Task(
+          id: id,
+          name: name,
+          isDone: isDone,
+          priority: priority,
+          recurring: recurring,
+          numberOfRecurrences: numberOfRecurrence,
+          dueDate: dueDate,
+          interval: interval);
+
+      t.add(task);
     }
     // print(t.length);
     return t;
