@@ -1,7 +1,7 @@
 name: check_it_off
 description: A new Flutter application.
 
-version: 1.0.4+2
+version: 1.0.5+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -34,6 +34,7 @@ dependencies:
   recase: ^3.0.0
   timezone: ^0.5.7
   flutter_native_timezone: ^1.0.4
+  flutter_widgetkit: ^1.0.0
 
 dev_dependencies:
   flutter_test:

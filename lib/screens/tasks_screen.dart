@@ -145,10 +145,24 @@ class _TasksScreenState extends State<TasksScreen> {
     if (qaOrder != null) {
       order = qaOrder;
       setOrder(order);
+      if(order == 'loading'){
+        prefs.setString('order', 'normal');
+        setOrder('normal');
+      }
+    }
+    else{
+      if(myOrder=='loading'){
+        prefs.setString('order', 'normal');
+          setOrder('normal');
+      }
     }
     try {
       if (order != null) {
         setOrder(order);
+        if(order == 'loading'){
+          prefs.setString('order', 'normal');
+          setOrder('normal');
+        }
       }
     } catch (e) {
       print('Order not set, setting default');
@@ -161,6 +175,8 @@ class _TasksScreenState extends State<TasksScreen> {
     onboarded();
     getShowAllFlag();
     getOrder();
+    DB db = new DB();
+    db.widgetList();
 
     archived = false;
     notify = false;

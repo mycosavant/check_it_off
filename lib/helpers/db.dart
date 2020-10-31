@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:check_it_off/helpers/widget_helper.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -72,6 +73,7 @@ class DB {
     int res = await dbClient.insert("Task", task.toMap());
     turnOffNotification(flutterLocalNotificationsPlugin);
     turnOnNotfications(true);
+    widgetList();
     return res;
   }
 
@@ -114,6 +116,7 @@ class DB {
         await dbClient.rawDelete('DELETE FROM Task WHERE id = ?', [task.id]);
     turnOffNotification(flutterLocalNotificationsPlugin);
     turnOnNotfications(true);
+    widgetList();
     return res;
   }
 
@@ -125,6 +128,7 @@ class DB {
 
     turnOffNotification(flutterLocalNotificationsPlugin);
     turnOnNotfications(true);
+    widgetList();
     // var sql =
     //     'UPDATE Task SET name=\'${task.name}\', isDone=${task.isDone ? 1 : 0}, priority=\'${task.priority.toString()}\',recurring=${task.recurring ? 1 : 0}, interval=\'${task.interval.toString()}\', dueDate=\'${task.dueDate}\' WHERE id = ${task.id}';
     // var res = await dbClient.rawQuery(sql);
@@ -213,6 +217,7 @@ class DB {
         update(task);
       }
     }
+    widgetList();
     // print(t.length);
     return t;
   }
@@ -271,5 +276,30 @@ class DB {
     }
     // print(t.length);
     return t;
+  }
+
+  void widgetList() async {
+    var dbClient = await db;
+    String sql = 'SELECT * FROM Task';
+    sql = '$sql WHERE isDone=0 order by dueDate';
+    List<Map> list = await dbClient.rawQuery(sql);
+    List<Task> t = new List();
+    String widgetString = "";
+    for (int i = 0; i < list.length; i++) {
+      var name = list[i]["name"].toString();
+      var dueDate = list[i]['dueDate'] == ""
+          ? DateTime.now().toString()
+          : list[i]['dueDate'];
+      DateFormat formatter = DateFormat('MM/dd/yyyy');
+      dueDate = formatter.format(DateTime.parse(dueDate));
+      if(widgetString == "") {
+        widgetString = "$name\t\t$dueDate";
+      }
+      else{
+        widgetString = "$widgetString\n$name\t\t$dueDate";
+      }
+    }
+    FlutterWidgetData fwd = FlutterWidgetData(widgetString);
+    fwd.setWidgetData();
   }
 }
