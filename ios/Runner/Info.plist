@@ -31,6 +31,10 @@
 	<true/>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Check It Off Pro would like to add tasks to the calendar for your convenience.</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>ConfigurationIntent</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
