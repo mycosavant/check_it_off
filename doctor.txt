@@ -1,0 +1,28 @@
+[✓] Flutter (Channel stable, 1.22.3, on Mac OS X 10.15.7 19H2, locale en-US)
+    • Flutter version 1.22.3 at /usr/local/Caskroom/flutter/1.20.2/flutter
+    • Framework revision 8874f21e79 (4 days ago), 2020-10-29 14:14:35 -0700
+    • Engine revision a1440ca392
+    • Dart version 2.10.3
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 30.0.2)
+    • Android SDK at /Users/Patrick/Library/Android/sdk
+    • Platform android-30, build-tools 30.0.2
+    • Java binary at: /Applications/Android Studio.app/Contents/jre/jdk/Contents/Home/bin/java
+    • Java version OpenJDK Runtime Environment (build 1.8.0_242-release-1644-b3-6222593)
+    • All Android licenses accepted.
+
+[✓] Xcode - develop for iOS and macOS (Xcode 12.1)
+    • Xcode at /Applications/Xcode.app/Contents/Developer
+    • Xcode 12.1, Build version 12A7403
+    • CocoaPods version 1.10.0
+
+[!] Android Studio (version 4.1)
+    • Android Studio at /Applications/Android Studio.app/Contents
+    ✗ Flutter plugin not installed; this adds Flutter specific functionality.
+    ✗ Dart plugin not installed; this adds Dart specific functionality.
+    • Java version OpenJDK Runtime Environment (build 1.8.0_242-release-1644-b3-6222593)
+
+[✓] Connected device (1 available)
+    • iPhone 11 (mobile) • 74010FE1-DD61-4F0F-9F56-D80BF6CEC055 • ios • com.apple.CoreSimulator.SimRuntime.iOS-14-1 (simulator)
+
+! Doctor found issues in 1 category.
