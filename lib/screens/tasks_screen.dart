@@ -16,6 +16,7 @@ import '../main.dart';
 
 class TasksScreen extends StatefulWidget {
   final qaOrder;
+
   TasksScreen([this.qaOrder]);
 
   @override
@@ -24,6 +25,7 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
   final qaOrder;
+
   _TasksScreenState([this.qaOrder]);
 
   String myOrder = 'loading';
@@ -68,8 +70,11 @@ class _TasksScreenState extends State<TasksScreen> {
     var db = new DB();
     List<Task> _results = await db.query(archived, order);
     _tasks = _results;
-    Provider.of<TaskData>(context, listen: false).tasks = _tasks;
-    setState(() {});
+    try {
+      Provider.of<TaskData>(context, listen: false).tasks = _tasks;
+
+      setState(() {});
+    } catch (e) {}
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('order', order);
     myOrder = setOrderString(order);
@@ -99,6 +104,9 @@ class _TasksScreenState extends State<TasksScreen> {
     if (notify == null) {
       prefs.setBool("notify", false);
       notify = false;
+    }
+    if(notify == false){
+      turnOffNotification(flutterLocalNotificationsPlugin);
     }
   }
 
@@ -145,21 +153,20 @@ class _TasksScreenState extends State<TasksScreen> {
     if (qaOrder != null) {
       order = qaOrder;
       setOrder(order);
-      if(order == 'loading'){
+      if (order == 'loading') {
         prefs.setString('order', 'normal');
         setOrder('normal');
       }
-    }
-    else{
-      if(myOrder=='loading'){
+    } else {
+      if (myOrder == 'loading') {
         prefs.setString('order', 'normal');
-          setOrder('normal');
+        setOrder('normal');
       }
     }
     try {
       if (order != null) {
         setOrder(order);
-        if(order == 'loading'){
+        if (order == 'loading') {
           prefs.setString('order', 'normal');
           setOrder('normal');
         }
@@ -383,11 +390,12 @@ class _TasksScreenState extends State<TasksScreen> {
               ),
             ),
             Padding(
-              padding:  const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15.0),
-              child: Container(alignment: Alignment.centerLeft,
+              child: Container(
+                alignment: Alignment.centerLeft,
                 width: 100,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -401,7 +409,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       ),
                     ),
                     Padding(
-                      padding:  const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                     ),
                     FlatButton(
                         shape: new RoundedRectangleBorder(

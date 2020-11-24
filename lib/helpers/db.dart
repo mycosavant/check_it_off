@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:check_it_off/helpers/widget_helper.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:io' as io;
@@ -17,6 +18,8 @@ class DB {
   factory DB() => _instance;
 
   static Database _db;
+
+  bool notificationsOn;
 
   String sort = 'normal';
 
@@ -69,17 +72,22 @@ class DB {
 
   Future<int> insert(Task task) async {
     var dbClient = await db;
+    notificationCheck();
 
     int res = await dbClient.insert("Task", task.toMap());
-    turnOffNotification(flutterLocalNotificationsPlugin);
-    turnOnNotfications(true);
+    if(notificationsOn) {
+      turnOffNotification(flutterLocalNotificationsPlugin);
+      turnOnNotfications(true);
+    }
+    else{
+      turnOffNotification(flutterLocalNotificationsPlugin);
+    }
     widgetList();
     return res;
   }
 
   Future<List<Task>> getTask() async {
     var dbClient = await db;
-
     List<Map> list = await dbClient.rawQuery('SELECT * FROM Task');
     List<Task> tasks = new List();
     for (int i = 0; i < list.length; i++) {
@@ -112,22 +120,37 @@ class DB {
   Future<int> delete(Task task) async {
     var dbClient = await db;
 
+    notificationCheck();
+
     int res =
         await dbClient.rawDelete('DELETE FROM Task WHERE id = ?', [task.id]);
-    turnOffNotification(flutterLocalNotificationsPlugin);
-    turnOnNotfications(true);
+    if(notificationsOn) {
+      turnOffNotification(flutterLocalNotificationsPlugin);
+      turnOnNotfications(true);
+    }
+    else{
+      turnOffNotification(flutterLocalNotificationsPlugin);
+    }
     widgetList();
     return res;
   }
 
   Future<bool> update(Task task) async {
     var dbClient = await db;
+
+    notificationCheck();
+
     var r = await dbClient.rawQuery('SELECT * from Task');
     var res = await dbClient
         .update("Task", task.toMap(), where: "id = ?", whereArgs: [task.id]);
 
-    turnOffNotification(flutterLocalNotificationsPlugin);
-    turnOnNotfications(true);
+    if(notificationsOn) {
+      turnOffNotification(flutterLocalNotificationsPlugin);
+      turnOnNotfications(true);
+    }
+    else{
+      turnOffNotification(flutterLocalNotificationsPlugin);
+    }
     widgetList();
     // var sql =
     //     'UPDATE Task SET name=\'${task.name}\', isDone=${task.isDone ? 1 : 0}, priority=\'${task.priority.toString()}\',recurring=${task.recurring ? 1 : 0}, interval=\'${task.interval.toString()}\', dueDate=\'${task.dueDate}\' WHERE id = ${task.id}';
@@ -301,5 +324,14 @@ class DB {
     }
     FlutterWidgetData fwd = FlutterWidgetData(widgetString);
     fwd.setWidgetData();
+  }
+
+  void notificationCheck() async {
+    final prefs = await SharedPreferences.getInstance();
+    notificationsOn = prefs.getBool('notify');
+    if (notificationsOn == null) {
+      prefs.setBool("notify", false);
+      notificationsOn = false;
+    }
   }
 }

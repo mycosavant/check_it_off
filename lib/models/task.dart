@@ -1,6 +1,7 @@
 enum priorityLevel { High, Normal, Low }
 enum recurrenceInterval { None, Daily, Weekly, Monthly }
 
+// ignore: must_be_immutable
 class Task {
   var id;
   String name;
@@ -18,10 +19,10 @@ class Task {
       this.name,
       this.isDone = false,
       this.priority,
-      this.recurring=false,
-      this.numberOfRecurrences=0,
+      this.recurring = false,
+      this.numberOfRecurrences = 0,
       this.interval,
-      this.dueDate=''});
+      this.dueDate = ''});
 
   void toggleDone() {
     isDone = !isDone;
@@ -59,7 +60,23 @@ class Task {
                 ? recurrenceInterval.Weekly
                 : (map['interval'].toString().contains('Monthly'))
                     ? recurrenceInterval.Monthly
-                    :  recurrenceInterval.None,
+                    : recurrenceInterval.None,
         dueDate: map['dueDate']);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Task &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          isDone == other.isDone &&
+          dueDate == other.dueDate &&
+          priority == other.priority &&
+          interval == other.interval &&
+          recurring == other.recurring &&
+          numberOfRecurrences == other.numberOfRecurrences;
+
+  @override
+  int get hashCode => name.hashCode;
 }
