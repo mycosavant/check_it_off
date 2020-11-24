@@ -105,6 +105,9 @@ class _TasksScreenState extends State<TasksScreen> {
       prefs.setBool("notify", false);
       notify = false;
     }
+    if(notify == false){
+      turnOffNotification(flutterLocalNotificationsPlugin);
+    }
   }
 
   refresh(dynamic childValue) {
