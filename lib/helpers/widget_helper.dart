@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io' show Platform;
 import 'package:flutter_widgetkit/flutter_widgetkit.dart';
 
 class FlutterWidgetData {
@@ -16,8 +16,14 @@ class FlutterWidgetData {
       };
 
   void setWidgetData(){
-    // print(jsonEncode(this.text));
-    WidgetKit.setItem('widgetData', jsonEncode(FlutterWidgetData(this.text)), 'group.com.grimshawcoding.checkitoff');
-    WidgetKit.reloadAllTimelines();
+    if (Platform.isIOS) {
+      // print(jsonEncode(this.text));
+      WidgetKit.setItem('widgetData', jsonEncode(FlutterWidgetData(this.text)),
+          'group.com.grimshawcoding.checkitoff');
+      WidgetKit.reloadAllTimelines();
+    }
+    else{
+      print('Skipping iOS widget Code.');
+    }
   }
 }
