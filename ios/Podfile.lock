@@ -58,7 +58,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   add_to_calendar: 8d1fe5bc868c1393584ab74165be36ee30c9bc4b
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_widgetkit: a0e9b0d50ee9bec366dad36c639509daaafc397a
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
