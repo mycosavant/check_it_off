@@ -29,7 +29,7 @@ class FlutterWidgetData {
       saveWidgetData(this.text);
     }
     else {
-      print('Widget not supported currently, skipping.')
+      print('Widget not supported currently, skipping.');
     }
   }
 
@@ -45,7 +45,7 @@ class FlutterWidgetData {
   Future<void> _sendData(String data) async {
     try {
       return Future.wait([
-        HomeWidget.saveWidgetData<String>('title', 'Due Today'),
+        HomeWidget.saveWidgetData<String>('title', 'Tasks - Due Date\n____________'),
         HomeWidget.saveWidgetData<String>('message', data),
       ]);
     } on PlatformException catch (exception) {
