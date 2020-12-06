@@ -25,8 +25,11 @@ class FlutterWidgetData {
           'group.com.grimshawcoding.checkitoff');
       WidgetKit.reloadAllTimelines();
     }
-    else{
+    else if (Platform.isAndroid) {
       saveWidgetData(this.text);
+    }
+    else {
+      print('Widget not supported currently, skipping.')
     }
   }
 
