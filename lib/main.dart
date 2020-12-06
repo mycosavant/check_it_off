@@ -16,6 +16,7 @@ import 'models/theme_notifier.dart';
 import 'models/themes.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:home_widget/home_widget.dart';
 
 const EVENTS_KEY = "fetch_events";
 
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    // HomeWidget.setAppGroupId('group..com.grimshawcoding.check_it_off');
     super.initState();
     final QuickActions quickActions = QuickActions();
     quickActions.initialize((String shortcutType) {
