@@ -31,6 +31,7 @@ dependencies:
   flutter_redux: ^0.6.0
   recase: ^3.0.0
   flutter_widgetkit: ^1.0.0
+  home_widget: ^0.0.1
 
 dev_dependencies:
   flutter_test:

@@ -301,7 +301,7 @@ class DB {
     return t;
   }
 
-  void widgetList() async {
+  Future <String> widgetQuery() async {
     var dbClient = await db;
     String sql = 'SELECT * FROM Task';
     sql = '$sql WHERE isDone=0 order by dueDate';
@@ -322,7 +322,11 @@ class DB {
         widgetString = "$widgetString\n$name\t\t$dueDate";
       }
     }
-    FlutterWidgetData fwd = FlutterWidgetData(widgetString);
+    return widgetString;
+  }
+
+  void widgetList() async {
+    FlutterWidgetData fwd = FlutterWidgetData(await widgetQuery());
     fwd.setWidgetData();
   }
 
