@@ -140,7 +140,7 @@ class DB {
 
     notificationCheck();
 
-    var r = await dbClient.rawQuery('SELECT * from Task');
+    // var r = await dbClient.rawQuery('SELECT * from Task');
     var res = await dbClient
         .update("Task", task.toMap(), where: "id = ?", whereArgs: [task.id]);
 
@@ -152,13 +152,7 @@ class DB {
       turnOffNotification(flutterLocalNotificationsPlugin);
     }
     widgetList();
-    // var sql =
-    //     'UPDATE Task SET name=\'${task.name}\', isDone=${task.isDone ? 1 : 0}, priority=\'${task.priority.toString()}\',recurring=${task.recurring ? 1 : 0}, interval=\'${task.interval.toString()}\', dueDate=\'${task.dueDate}\' WHERE id = ${task.id}';
-    // var res = await dbClient.rawQuery(sql);
     return res > 0 ? true : false;
-    // delete(task);
-    // io.sleep(Duration(seconds: 5));
-    // insert(task);
   }
 
   Future<List<Task>> query(bool archived, [order = 'normal']) async {

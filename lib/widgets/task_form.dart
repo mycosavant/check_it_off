@@ -2,6 +2,7 @@ import 'dart:io' show Platform;
 import 'package:check_it_off/helpers/db.dart';
 import 'package:check_it_off/helpers/validator.dart';
 import 'package:check_it_off/models/theme_notifier.dart';
+import 'package:check_it_off/screens/tasks_screen.dart';
 import 'package:check_it_off/widgets/toggle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -325,7 +326,14 @@ class _TaskFormState extends State<TaskForm> {
                           dynamic result = await db.insert(t);
 
                           // await DB.insert(t);
-                          Navigator.pop(context);
+
+                          Navigator.pushReplacement(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => TasksScreen(),
+                              transitionDuration: Duration(seconds: 0),
+                            ),
+                          );
                         }
                       }
                     : () async {
