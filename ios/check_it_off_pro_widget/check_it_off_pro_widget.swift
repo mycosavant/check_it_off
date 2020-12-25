@@ -47,7 +47,7 @@ struct Provider: IntentTimelineProvider {
         }
 
         let currentDate = Date()
-        let entryDate = Calendar.current.date(byAdding: .minute, value: 10, to: currentDate)!
+        let entryDate = Calendar.current.date(byAdding: .minute, value: 1, to: currentDate)!
         let entry = SimpleEntry(date: entryDate, flutterData: flutterData)
         entries.append(entry)
 
@@ -64,8 +64,16 @@ func getData(str: String) -> String {
     let today = (dateFormatter.string(from: date))
     let tasks = str.components(separatedBy: "\n")
     for task in tasks {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        let taskDateStr = str.components(separatedBy: "\t\t")[0]
+        let taskDate = (dateFormatter.date(from: taskDateStr))
+        let todayDate = (dateFormatter.date(from: today))
+        let calendar = Calendar.current
+        let diff = calendar.dateComponents([.day], from: taskDate!, to: todayDate!)
         if task.contains(today){
-            result += result + task + "\n"
+            result += result + today //task + "\n"
         }
     }
     return result
@@ -80,14 +88,14 @@ struct FlutterWidgetEntryView : View {
     private var FlutterDataView: some View {
        
         VStack{
-            Text("Today's Tasks\n_____________").font(.title2).multilineTextAlignment(.center)
+            Text("Today's Tasks").font(.title2).multilineTextAlignment(.center)
             Text(getData(str: entry.flutterData!.text)).font(.body).multilineTextAlignment(.center)
             
         }
     }
     
     private var NoDataView: some View {
-      Text("All caught up.\nOpen the App to add more tasks or initialize the widget.")
+      Text("All Done")
     }
     
     var body: some View {
