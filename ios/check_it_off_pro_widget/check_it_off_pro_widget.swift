@@ -47,7 +47,7 @@ struct Provider: IntentTimelineProvider {
         }
 
         let currentDate = Date()
-        let entryDate = Calendar.current.date(byAdding: .hour, value: 24, to: currentDate)!
+        let entryDate = Calendar.current.date(byAdding: .minute, value: 10, to: currentDate)!
         let entry = SimpleEntry(date: entryDate, flutterData: flutterData)
         entries.append(entry)
 
@@ -56,14 +56,32 @@ struct Provider: IntentTimelineProvider {
     }
 }
 
+func getData(str: String) -> String {
+    var result = ""
+    let date = Date()
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MM/dd/yyyy"
+    let today = (dateFormatter.string(from: date))
+    let tasks = str.components(separatedBy: "\n")
+    for task in tasks {
+        if task.contains(today){
+            result += result + task + "\n"
+        }
+    }
+    return result
+}
+
+
+
+
 struct FlutterWidgetEntryView : View {
     var entry: Provider.Entry
     
     private var FlutterDataView: some View {
        
         VStack{
-            Text("Tasks - Due Date\n_____________").font(.title2).multilineTextAlignment(.center)
-            Text(entry.flutterData!.text).multilineTextAlignment(.center)
+            Text("Today's Tasks\n_____________").font(.title2).multilineTextAlignment(.center)
+            Text(getData(str: entry.flutterData!.text)).font(.body).multilineTextAlignment(.center)
             
         }
     }
