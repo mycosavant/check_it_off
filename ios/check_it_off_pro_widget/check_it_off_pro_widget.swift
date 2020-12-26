@@ -47,7 +47,7 @@ struct Provider: IntentTimelineProvider {
         }
 
         let currentDate = Date()
-        let entryDate = Calendar.current.date(byAdding: .minute, value: 1, to: currentDate)!
+        let entryDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
         let entry = SimpleEntry(date: entryDate, flutterData: flutterData)
         entries.append(entry)
 
@@ -56,40 +56,95 @@ struct Provider: IntentTimelineProvider {
     }
 }
 
-func getData(str: String) -> String {
+func getData(str: String, today: Int) -> String {
     var result = ""
-    let date = Date()
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "MM/dd/yyyy"
-    let today = (dateFormatter.string(from: date))
     let tasks = str.components(separatedBy: "\n")
-    for task in tasks {
+    tasks.forEach {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "MM/dd/yyyy"
-        let taskDateStr = str.components(separatedBy: "\t\t")[0]
+        let taskDateStr = $0.components(separatedBy: "\t\t")[1]
         let taskDate = (dateFormatter.date(from: taskDateStr))
-        let todayDate = (dateFormatter.date(from: today))
-        let calendar = Calendar.current
-        let diff = calendar.dateComponents([.day], from: taskDate!, to: todayDate!)
-        if task.contains(today){
-            result += result + today //task + "\n"
+        if today == 1 {
+            if (taskDate! <= dateFormatter.date(from:dateFormatter.string(from: Date()))!) {
+                result +=  $0  + "\n"
+            }
+        }
+        else if today == 2{
+            if (taskDate! < dateFormatter.date(from:dateFormatter.string(from: Date()))!) {
+                result +=  $0  + "\n"
+            }
+        }
+        else if today == 3{
+            if (taskDate! == dateFormatter.date(from:dateFormatter.string(from: Date()))!) {
+                result +=  $0  + "\n"
+            }
+        }
+        else{
+            result +=  $0  + "\n"
         }
     }
     return result
 }
 
+struct CurrentTaskView : View {
+    var entry: Provider.Entry
+    
+    private var FlutterDataView: some View {
+       
+        VStack{
+            Text("Current Tasks").font(.title2).multilineTextAlignment(.center)
+            Text(getData(str: entry.flutterData!.text, today: 1)).font(.body).multilineTextAlignment(.center)
+            
+        }
+    }
+    
+    private var NoDataView: some View {
+      Text("All Done")
+    }
+    
+    var body: some View {
+      if(entry.flutterData == nil) {
+        NoDataView
+      } else {
+        FlutterDataView
+      }
+    }
+}
 
-
-
-struct FlutterWidgetEntryView : View {
+struct TodayTaskView : View {
     var entry: Provider.Entry
     
     private var FlutterDataView: some View {
        
         VStack{
             Text("Today's Tasks").font(.title2).multilineTextAlignment(.center)
-            Text(getData(str: entry.flutterData!.text)).font(.body).multilineTextAlignment(.center)
+            Text(getData(str: entry.flutterData!.text, today: 3)).font(.body).multilineTextAlignment(.center)
+            
+        }
+    }
+    
+    private var NoDataView: some View {
+      Text("All Done")
+    }
+    
+    var body: some View {
+      if(entry.flutterData == nil) {
+        NoDataView
+      } else {
+        FlutterDataView
+      }
+    }
+}
+
+struct AllTaskView : View {
+    var entry: Provider.Entry
+    
+    private var FlutterDataView: some View {
+       
+        VStack{
+            Text("All Tasks").font(.title2).multilineTextAlignment(.center)
+            Text(getData(str: entry.flutterData!.text, today: 4)).font(.body).multilineTextAlignment(.center)
             
         }
     }
@@ -108,23 +163,119 @@ struct FlutterWidgetEntryView : View {
 }
 
 
-@main
-struct FlutterWidget: Widget {
-    let kind: String = "FlutterWidget"
+struct PastDueTaskView : View {
+    var entry: Provider.Entry
+
+    private var FlutterDataView: some View {
+
+        VStack{
+            Text("Past Due Tasks").font(.title2).multilineTextAlignment(.center)
+            Text(getData(str: entry.flutterData!.text, today: 2)).font(.body).multilineTextAlignment(.center)
+
+        }
+    }
+
+    private var NoDataView: some View {
+      Text("All Done")
+    }
+
+    var body: some View {
+      if(entry.flutterData == nil) {
+        NoDataView
+      } else {
+        FlutterDataView
+      }
+    }
+}
+
+struct CurrentTaskWidget: Widget {
+    let kind: String = "CurrentTaskWidget"
 
     var body: some WidgetConfiguration {
         IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
-            FlutterWidgetEntryView(entry: entry)
+            CurrentTaskView(entry: entry)
         }
         .configurationDisplayName("Check It Off Pro")
-        .description("Provides task data from Check It Off Pro.")
+        .description("Current Tasks for Today and Tasks that are Past Due")
         .supportedFamilies([.systemMedium, .systemLarge])
     }
 }
 
-struct FlutterWidget_Previews: PreviewProvider {
+struct CurrentTaskWidget_Previews: PreviewProvider {
     static var previews: some View {
-        FlutterWidgetEntryView(entry: SimpleEntry(date: Date(), flutterData: nil))
+        CurrentTaskView(entry: SimpleEntry(date: Date(), flutterData: nil))
             .previewContext(WidgetPreviewContext(family: .systemMedium)).previewContext(WidgetPreviewContext(family: .systemLarge))
     }
 }
+
+struct TodayTaskWidget: Widget {
+    let kind: String = "TodayTaskWidget"
+
+    var body: some WidgetConfiguration {
+        IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
+            TodayTaskView(entry: entry)
+        }
+        .configurationDisplayName("Check It Off Pro")
+        .description("Tasks that are Due Today (Hides Past Due Tasks)")
+        .supportedFamilies([.systemMedium, .systemLarge])
+    }
+}
+
+struct TodayTaskWidget_Previews: PreviewProvider {
+    static var previews: some View {
+        TodayTaskView(entry: SimpleEntry(date: Date(), flutterData: nil))
+            .previewContext(WidgetPreviewContext(family: .systemMedium)).previewContext(WidgetPreviewContext(family: .systemLarge))
+    }
+}
+
+struct PastDueWidget: Widget {
+    let kind: String = "PastDueWidget"
+
+    var body: some WidgetConfiguration {
+        IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
+            PastDueTaskView(entry: entry)
+        }
+        .configurationDisplayName("Check It Off Pro")
+        .description("Tasks that are Past Due")
+        .supportedFamilies([.systemMedium, .systemLarge])
+    }
+}
+
+struct PastDueWidget_Previews: PreviewProvider {
+    static var previews: some View {
+        PastDueTaskView(entry: SimpleEntry(date: Date(), flutterData: nil))
+            .previewContext(WidgetPreviewContext(family: .systemMedium)).previewContext(WidgetPreviewContext(family: .systemLarge))
+    }
+}
+
+struct AllTaskWidget: Widget {
+    let kind: String = "AllTaskWidget"
+
+    var body: some WidgetConfiguration {
+        IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
+            AllTaskView(entry: entry)
+        }
+        .configurationDisplayName("Check It Off Pro")
+        .description("All Tasks")
+        .supportedFamilies([.systemMedium, .systemLarge])
+    }
+}
+
+struct AllTaskWidget_Previews: PreviewProvider {
+    static var previews: some View {
+        AllTaskView(entry: SimpleEntry(date: Date(), flutterData: nil))
+            .previewContext(WidgetPreviewContext(family: .systemMedium)).previewContext(WidgetPreviewContext(family: .systemLarge))
+    }
+}
+
+@main
+struct TaskWidgets: WidgetBundle {
+    @WidgetBundleBuilder
+    var body: some Widget {
+        CurrentTaskWidget()
+        TodayTaskWidget()
+        PastDueWidget()
+        AllTaskWidget()
+    }
+}
+
