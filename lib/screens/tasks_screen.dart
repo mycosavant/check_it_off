@@ -1,6 +1,7 @@
 import 'package:check_it_off/helpers/db.dart';
 import 'package:check_it_off/helpers/notification_helper.dart';
 import 'package:check_it_off/helpers/onboarding.dart';
+import 'package:check_it_off/helpers/onboarding_helper.dart';
 import 'package:check_it_off/models/task.dart';
 import 'package:check_it_off/models/theme_notifier.dart';
 import 'package:flutter/material.dart';
@@ -80,24 +81,6 @@ class _TasksScreenState extends State<TasksScreen> {
     myOrder = setOrderString(order);
   }
 
-  void onboarded() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool ran = prefs.getBool('onboarded');
-    String version = prefs.getString('onboardedVersion');
-    prefs.setBool("onboarded", true);
-    prefs.setString('onboardedVersion', '1.0.1');
-    try {
-      if (!ran || version != '1.0.1') {
-        Navigator.of(context).pushReplacement(
-            new MaterialPageRoute(builder: (context) => new Onboarding()));
-      }
-    } catch (e) {
-      print('Onboarding has not run.');
-      Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new Onboarding()));
-    }
-  }
-
   void notificationCheck() async {
     final prefs = await SharedPreferences.getInstance();
     notify = prefs.getBool('notify');
@@ -105,7 +88,7 @@ class _TasksScreenState extends State<TasksScreen> {
       prefs.setBool("notify", false);
       notify = false;
     }
-    if(notify == false){
+    if (notify == false) {
       turnOffNotification(flutterLocalNotificationsPlugin);
     }
   }
@@ -179,7 +162,8 @@ class _TasksScreenState extends State<TasksScreen> {
   }
 
   initState() {
-    onboarded();
+    OnboardingHelper onboardingHelper = new OnboardingHelper();
+    onboardingHelper.onboarded(context);
     getShowAllFlag();
     getOrder();
     DB db = new DB();
